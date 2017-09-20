@@ -8,7 +8,7 @@ double finalp = args.get(0)/2+printerOffset.getMM()
 
 double finalf = args.get(1)+printerOffset.getMM()
 
-CSG pshaft =new Cylinder(finalp,finalp,11,(int)30).toCSG() // a one line Cylinder
+CSG pshaft =new Cylinder(finalp,finalp,args.get(2),(int)30).toCSG() // a one line Cylinder
 CSG flat = new Cube(	finalp*2,// X dimention
 			finalf,// Y dimention
 			args.get(2)//  Z dimention
