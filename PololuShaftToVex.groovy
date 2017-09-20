@@ -1,15 +1,11 @@
 LengthParameter printerOffset = new LengthParameter("printerOffset",0.25,[2,0.001])
 
-double vshaftSize = 3.12
-double finalV = vshaftSize+(printerOffset.getMM()*1.5)
-
-
-CSG vshaft =  new RoundedCube(	finalV,// X dimention
-				finalV,// Y dimention
-				11//  Z dimention
-				)
-				.cornerRadius(0.5)// sets the radius of the corner
-				.toCSG()// converts it to a CSG tor display
+CSG vshaft =  (CSG)ScriptingEngine
+	                    .gitScriptRun(
+                                "https://github.com/WPIRoboticsEngineering/RBELabCustomParts.git", // git location of the library
+	                              "dShaft.groovy" , // file to load
+	                              [11]
+                        )
 				.toZMax()
 				.movez(-1)
 pshaft=(CSG)ScriptingEngine
