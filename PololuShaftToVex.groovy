@@ -1,21 +1,8 @@
+LengthParameter printerOffset = new LengthParameter("printerOffset",0.25,[2,0.001])
 
 double vshaftSize = 3.12
-double finalV = vshaftSize+0.37
+double finalV = vshaftSize+(printerOffset.getMM()*1.5)
 
-double pshaftSize = 6.0/2.0
-double finalp = pshaftSize+0.27
-
-double fshaftSize = 5.34
-double finalf = fshaftSize+0.25
-
-CSG pshaft =new Cylinder(finalp,finalp,11,(int)30).toCSG() // a one line Cylinder
-CSG flat = new Cube(	finalp*2,// X dimention
-			finalf,// Y dimention
-			11//  Z dimention
-			).toCSG()
-			.toYMin()
-			.toZMin()
-			.movey(pshaft.getMinY())
 
 CSG vshaft =  new RoundedCube(	finalV,// X dimention
 				finalV,// Y dimention
@@ -25,7 +12,12 @@ CSG vshaft =  new RoundedCube(	finalV,// X dimention
 				.toCSG()// converts it to a CSG tor display
 				.toZMax()
 				.movez(-1)
-pshaft=pshaft.intersect(flat)
+pshaft=(CSG)ScriptingEngine
+	                    .gitScriptRun(
+                                "https://github.com/WPIRoboticsEngineering/RBELabCustomParts.git", // git location of the library
+	                              "dShaft.groovy" , // file to load
+	                              [6.0,5.34,11]
+                        )
 
 CSG coupler = new Cube(	12,// X dimention
 			12,// Y dimention
