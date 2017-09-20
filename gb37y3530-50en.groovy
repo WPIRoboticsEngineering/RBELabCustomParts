@@ -11,7 +11,8 @@ double totalShaftLength = 21
 double dShaftSection = 12
 double dShaftStart = totalShaftLength-dShaftSection
 double shaftRadius = (shaftDiameter/2)+printerOffset.getMM()
-
+LengthParameter boltLength		= new LengthParameter("Bolt Length",10,[180,10])
+boltLength.setMM(shaftCollarHeight)
 CSG body =new Cylinder(motorBodyRadius,motorBodyRadius,bodyLength,(int)30).toCSG() // a one line Cylinder
 			.toZMax()
 CSG collar =new Cylinder(shaftCollarDiameter,shaftCollarDiameter,shaftCollarHeight,(int)30).toCSG() // a one line Cylinder
