@@ -26,4 +26,5 @@ for(int i=60;i<360;i+=60){
 	bolts=bolts.union(bolt.rotz(i))
 }
 CSG wholeMotor = CSG.unionAll([pshaft,bolts,body])
+				.movex(-shaftCenterOffset)
 return wholeMotor
