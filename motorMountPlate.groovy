@@ -19,7 +19,7 @@ CSG gear =Vitamins.get("vexGear","HS36T")
 		.difference(motor)
 		.roty(180)
 		.toZMin()
-CSG mesh = Vitamins.get("vexGear","HS84T")
+CSG mesh = Vitamins.get("vexGear","HS12T")
 			.difference(vshaft)
 			
 int gearRadiusIndex = (int)((gear.getMaxX()+mesh.getMaxX())/vexHoleSpacing)
