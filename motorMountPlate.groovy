@@ -9,7 +9,7 @@ motor=(CSG)ScriptingEngine
 CSG vshaft =  (CSG)ScriptingEngine
 	                    .gitScriptRun(
                                 "https://github.com/WPIRoboticsEngineering/RBELabCustomParts.git", // git location of the library
-	                              "dShaft.groovy" , // file to load
+	                              "vexShaft.groovy" , // file to load
 	                              [60]
                         )				
 double vexHoleSpacing = 0.5*25.4
