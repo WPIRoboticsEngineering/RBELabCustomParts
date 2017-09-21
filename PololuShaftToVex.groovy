@@ -3,7 +3,7 @@ LengthParameter printerOffset = new LengthParameter("printerOffset",0.25,[2,0.00
 CSG vshaft =  (CSG)ScriptingEngine
 	                    .gitScriptRun(
                                 "https://github.com/WPIRoboticsEngineering/RBELabCustomParts.git", // git location of the library
-	                              "dShaft.groovy" , // file to load
+	                              "vexShaft.groovy" , // file to load
 	                              [11]
                         )
 				.toZMax()
