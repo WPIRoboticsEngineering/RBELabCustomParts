@@ -1,6 +1,4 @@
-CSG simpleSyntax =new Cylinder(10,10,40,(int)30).toCSG() // a one line Cylinder
-
-double wheelRadius = 33
+double wheelRadius = 33.0/2.0
 wheelHeight=17.6
 double radius = 6.0
 CSG profile = new RoundedCube(	wheelRadius,// X dimention
@@ -18,8 +16,8 @@ CSG wheel_body = CSG.unionAll(
 		Extrude.revolve(profile,(double)0,(int)40)
 		)
                       		
-CSG pin = new Cylinder(5, // Radius at the bottom
-                       5, // Radius at the top
+CSG pin = new Cylinder(2.5, // Radius at the bottom
+                       2.5, // Radius at the top
                        height, // Height
                        (int)30 //resolution
                        ).toCSG()
