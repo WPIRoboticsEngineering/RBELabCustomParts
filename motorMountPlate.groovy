@@ -1,3 +1,5 @@
+LengthParameter printerOffset = new LengthParameter("printerOffset",0.5,[2,0.001])
+printerOffset.setMM(0.6)
 motor=(CSG)ScriptingEngine
 	                    .gitScriptRun(
                                 "https://github.com/WPIRoboticsEngineering/RBELabCustomParts.git", // git location of the library
