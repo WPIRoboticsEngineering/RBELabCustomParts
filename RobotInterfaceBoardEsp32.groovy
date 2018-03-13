@@ -21,7 +21,7 @@ class BoardMaker{
 	static double wireRadius = 1.5
 	static double negativeWireOffset = 2
 	static double positiveWireOffset = 6
-	static double caseOutSet = 5
+	static double caseOutSet = 8
 	static double powerKeepawayOffset=53.21
 	def makeWiiConnector(){
 		CSG wiiConnect = new RoundedCube(	wiiConnectorWidth,// X dimention
@@ -168,7 +168,7 @@ class BoardMaker{
 	def makeCase(){
 		def board =makeBoard()
 		double caseRounding = 1
-		double frontCaseDepth = -cutoutDepth+boardY-ioKaY-caseRounding
+		double frontCaseDepth = -cutoutDepth+boardY-ioKaY-caseRounding+4
 		double lowerCaseDepth = Math.abs(board[0].getMinZ())
 		
 		CSG wirekeepaway = new RoundedCube(positiveWireOffset+wireRadius*8,caseOutSet-boardConnects,wireHeight+caseRounding*2)
@@ -194,12 +194,22 @@ class BoardMaker{
 						.union(	wirekeepaway)	
 						.difference(board)	
 		CSG frontTop = basicLug	
+						.scalez(1.6)
 						.toZMin()
 						.movez(-caseRounding*2)
 						.difference(board)	
-						.difference(frontBottom)						
-		def caseParts = [frontBottom,frontTop]
-		//return caseParts
+						.difference(frontBottom)	
+		double vexGrid = 1.0/2.0*25.4
+		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
+						.intersect(new Cube(vexGrid*6).toCSG())
+						.rotz(-90)
+						.movey(	-caseOutSet)	
+						.movex(-caseOutSet+caseRounding)
+						.movez(		frontBottom.getMinZ())	
+		CSG vexMountB = vexMount.movex(vexGrid*7)					
+		
+		def caseParts = [frontBottom,frontTop,vexMount,vexMountB]
+		return caseParts
 		board.addAll(caseParts)
 		return board
 	}
