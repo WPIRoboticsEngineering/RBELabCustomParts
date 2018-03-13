@@ -195,12 +195,13 @@ class BoardMaker{
 		CSG frontBottom = basicLug	
 						.union(	wirekeepaway)	
 						.difference(board)	
+		CSG fullBoard = CSG.unionAll(board)
 		CSG frontTop = basicLug	
 						.scalez(1.6)
 						.toZMin()
 						.movez(-caseRounding*2)
-						.difference(board)	
-						.difference(frontBottom)	
+						.minkowskiDifference(fullBoard,0.4)
+						.minkowskiDifference(frontBottom,0.4)
 		double vexGrid = 1.0/2.0*25.4
 		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
 						.intersect(new Cube(vexGrid*6).toCSG())
@@ -235,8 +236,8 @@ class BoardMaker{
 						.movez(-caseRounding*2)
 						.toYMin()
 						.movey(backeOfCaseY)
-						.difference(board)	
-						.difference(backBottom)	
+						.minkowskiDifference(fullBoard,0.4)	
+						.minkowskiDifference(backBottom,0.4)	
 							
 		frontBottom.setManufacturing({ toMfg ->
 			return toMfg
