@@ -21,8 +21,10 @@ class BoardMaker{
 	static double wireRadius = 1.5
 	static double negativeWireOffset = 2
 	static double positiveWireOffset = 6
-	static double caseOutSet = 8
+	static double caseOutSet = 4
 	static double powerKeepawayOffset=53.21
+	static double usbHeight=11.06
+	
 	def makeWiiConnector(){
 		CSG wiiConnect = new RoundedCube(	wiiConnectorWidth,// X dimention
 					wiiConnectorThickness,// Y dimention
@@ -161,14 +163,14 @@ class BoardMaker{
 						.union(usbCord)
 						.movey(-cutoutDepth+boardY)
 						.movex(boardX/2)
-						.movez(11.06)
+						.movez(usbHeight)
 		
 		return [wiiConnect,mainBoard,IOkeepaway,switchkeepaway,powerkeepaway,usbkeepaway]
 	}
 	def makeCase(){
 		def board =makeBoard()
 		double caseRounding = 1
-		double frontCaseDepth = -cutoutDepth+boardY-ioKaY-caseRounding+4
+		double frontCaseDepth = -cutoutDepth+boardY-ioKaY-caseRounding+3
 		double lowerCaseDepth = Math.abs(board[0].getMinZ())
 		
 		CSG wirekeepaway = new RoundedCube(positiveWireOffset+wireRadius*8,caseOutSet-boardConnects,wireHeight+caseRounding*2)
@@ -181,15 +183,15 @@ class BoardMaker{
 							.movex(wireRadius*3)	
 							.movey(-caseOutSet)
 							.movex(powerKeepawayOffset)	
-		
-		CSG basicLug = new RoundedCube(boardX+(boardConnects*2)+caseOutSet,frontCaseDepth,lowerCaseDepth)
+		double LugX = boardX+(boardConnects*2)+caseOutSet*2
+		CSG basicLug = new RoundedCube(LugX,frontCaseDepth,lowerCaseDepth)
 						.cornerRadius(caseRounding)
 						.toCSG()
 						.toZMax()
 						.toYMin()
 						.movey(-caseOutSet)
 						.toXMin()
-						.movex(-caseOutSet)
+						.movex(-caseOutSet-boardConnects)
 		CSG frontBottom = basicLug	
 						.union(	wirekeepaway)	
 						.difference(board)	
@@ -203,12 +205,66 @@ class BoardMaker{
 		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
 						.intersect(new Cube(vexGrid*6).toCSG())
 						.rotz(-90)
-						.movey(	-caseOutSet)	
-						.movex(-caseOutSet+caseRounding)
+						.movey(	-caseOutSet+caseRounding)	
+						.movex(-caseOutSet+caseRounding-boardConnects)
 						.movez(		frontBottom.getMinZ())	
-		CSG vexMountB = vexMount.movex(vexGrid*7)					
+		CSG vexMountB = vexMount.movex(vexGrid*7)
+						.union(	vexMount)				
+		CSG backVex = vexMountB
+						.movey(vexGrid*4)
+		double backeOfCaseY = boardY-	cutoutDepth
+		CSG usbkeepaway = new RoundedCube(13+caseRounding*2,frontCaseDepth,usbHeight+caseRounding*2+usbThickness/2)
+							.cornerRadius(caseRounding)
+							.toCSG()
+							.toZMin()
+							.movez(-caseRounding*2)
+							.toYMin()
+							.movex(boardX/2)
 		
-		def caseParts = [frontBottom,frontTop,vexMount,vexMountB]
+		CSG backBottom = basicLug
+						.toYMin()
+						.union(usbkeepaway)
+						.movey(backeOfCaseY)
+
+						.difference(board)	
+						.union(backVex)
+		frontBottom=frontBottom.union(vexMountB)
+		CSG backTop = basicLug	
+						.scalez(2)
+						.toZMin()
+						.movez(-caseRounding*2)
+						.toYMin()
+						.movey(backeOfCaseY)
+						.difference(board)	
+						.difference(backBottom)	
+							
+		frontBottom.setManufacturing({ toMfg ->
+			return toMfg
+					.toXMin()
+					.toYMin()
+					.toZMin()
+		})
+		backBottom.setManufacturing({ toMfg ->
+			return toMfg
+					.toXMin()
+					.toYMin()
+					.toZMin()
+		})		
+		frontTop.setManufacturing({ toMfg ->
+			return toMfg
+					.toXMin()
+					.toYMin()
+					.roty(180)
+					.toZMin()
+		})		
+		backTop.setManufacturing({ toMfg ->
+			return toMfg
+					.toXMin()
+					.toYMin()
+					.roty(180)
+					.toZMin()
+		})										
+		def caseParts = [frontBottom,frontTop,backBottom,backTop]
 		return caseParts
 		board.addAll(caseParts)
 		return board
