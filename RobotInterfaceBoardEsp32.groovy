@@ -202,6 +202,7 @@ class BoardMaker{
 						.movez(-caseRounding*2)
 						.minkowskiDifference(fullBoard,0.4)
 						.minkowskiDifference(frontBottom,0.4)
+						.difference(frontBottom)
 		double vexGrid = 1.0/2.0*25.4
 		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
 						.intersect(new Cube(vexGrid*6).toCSG())
@@ -238,7 +239,8 @@ class BoardMaker{
 						.movey(backeOfCaseY)
 						.minkowskiDifference(fullBoard,0.4)	
 						.minkowskiDifference(backBottom,0.4)	
-							
+						.difference(backBottom)	
+						
 		frontBottom.setManufacturing({ toMfg ->
 			return toMfg
 					.toXMin()
