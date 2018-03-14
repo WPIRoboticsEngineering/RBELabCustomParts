@@ -205,7 +205,7 @@ class BoardMaker{
 						.difference(frontBottom)
 		double vexGrid = 1.0/2.0*25.4
 		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
-						.intersect(new Cube(vexGrid*6).toCSG())
+						.intersect(new Cube(vexGrid*8).toCSG())
 						.rotz(-90)
 						.movey(	-caseOutSet+caseRounding)	
 						.movex(-caseOutSet+caseRounding-boardConnects)
@@ -213,7 +213,7 @@ class BoardMaker{
 		CSG vexMountB = vexMount.movex(vexGrid*7)
 						.union(	vexMount)				
 		CSG backVex = vexMountB
-						.movey(vexGrid*4)
+						.movey(vexGrid*3)
 		double backeOfCaseY = boardY-	cutoutDepth
 		CSG usbkeepaway = new RoundedCube(13+caseRounding*2,frontCaseDepth,usbHeight+caseRounding*2+usbThickness/2)
 							.cornerRadius(caseRounding)
@@ -240,19 +240,13 @@ class BoardMaker{
 						.minkowskiDifference(fullBoard,0.4)	
 						.minkowskiDifference(backBottom,0.4)	
 						.difference(backBottom)	
-						
-		frontBottom.setManufacturing({ toMfg ->
+		CSG bottom = frontBottom.union(backBottom)				
+		bottom.setManufacturing({ toMfg ->
 			return toMfg
 					.toXMin()
 					.toYMin()
 					.toZMin()
-		})
-		backBottom.setManufacturing({ toMfg ->
-			return toMfg
-					.toXMin()
-					.toYMin()
-					.toZMin()
-		})		
+		})	
 		frontTop.setManufacturing({ toMfg ->
 			return toMfg
 					.toXMin()
@@ -267,7 +261,7 @@ class BoardMaker{
 					.roty(180)
 					.toZMin()
 		})										
-		def caseParts = [frontBottom,frontTop,backBottom,backTop]
+		def caseParts = [bottom,frontTop,backTop]
 		return caseParts
 		board.addAll(caseParts)
 		return board
