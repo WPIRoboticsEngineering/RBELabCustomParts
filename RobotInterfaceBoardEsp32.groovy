@@ -14,13 +14,13 @@ class BoardMaker{
 	static double ioKaY =48.79
 	static double ioKaZ =17.67
 	static double lowerKeepaway = 1.75
-	static double holeCornerInset = 1.70+1.5
+	static double holeCornerInset = 1.8+1.5
 	static double boardConnects = 2.3
 	static double usbThickness = 6.75
 	static double wireHeight = 5
 	static double wireRadius = 1.5
-	static double negativeWireOffset = 2
-	static double positiveWireOffset = 6
+	static double negativeWireOffset = 3
+	static double positiveWireOffset = 7
 	static double caseOutSet = 4
 	static double powerKeepawayOffset=53.21
 	static double usbHeight=11.06
@@ -90,7 +90,7 @@ class BoardMaker{
 						.toZMax()	
 						.movez(cutoutRadius)
 						.movey(mainBoard.getMaxY()+cutoutRadius)
-						.movex(mainBoard.getMaxX()/2)
+						.movex(boardX/2)
 		mainBoard=mainBoard.difference(mainBoardCutout)
 		
 		CSG antenna = new Cube(21.85,7,13.69+boardZ+lowerKeepaway).toCSG()
@@ -153,7 +153,7 @@ class BoardMaker{
 						.toZMin()
 						.movey(27.75)
 						
-		CSG usbkeepaway = new RoundedCube(11.05,14.3+2.41,usbThickness)
+		CSG usbkeepaway = new RoundedCube(11.05,12.6,usbThickness)
 						.cornerRadius(1)
 						.toCSG()
 						.toYMin()
