@@ -24,7 +24,8 @@ class BoardMaker{
 	static double caseOutSet = 4
 	static double powerKeepawayOffset=53.21
 	static double usbHeight=11.06
-	
+	static LengthParameter	printerOffset 		= new LengthParameter("Printer Offset",0.6,[1.75,0])
+
 	def makeWiiConnector(){
 		CSG wiiConnect = new RoundedCube(	wiiConnectorWidth,// X dimention
 					wiiConnectorThickness,// Y dimention
@@ -200,8 +201,8 @@ class BoardMaker{
 						.scalez(1.6)
 						.toZMin()
 						.movez(-caseRounding*2)
-						.minkowskiDifference(fullBoard,0.4)
-						.minkowskiDifference(frontBottom,0.4)
+						.minkowskiDifference(fullBoard,printerOffset.getMM())
+						.minkowskiDifference(frontBottom,printerOffset.getMM())
 						.difference(frontBottom)
 		double vexGrid = 1.0/2.0*25.4
 		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
@@ -237,8 +238,8 @@ class BoardMaker{
 						.movez(-caseRounding*2)
 						.toYMin()
 						.movey(backeOfCaseY)
-						.minkowskiDifference(fullBoard,0.4)	
-						.minkowskiDifference(backBottom,0.4)	
+						.minkowskiDifference(fullBoard,printerOffset.getMM())	
+						.minkowskiDifference(backBottom,printerOffset.getMM())	
 						.difference(backBottom)	
 		CSG bottom = frontBottom.union(backBottom)				
 		bottom.setManufacturing({ toMfg ->
