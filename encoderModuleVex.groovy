@@ -1,3 +1,5 @@
+CSGDatabase.clear()
+
 LengthParameter encoderBoltKeepaway 		= new LengthParameter("encoderBoltKeepaway",0,[1.2,0])
 encoderBoltKeepaway.setMM(0)
 CSG encoderBearing = (CSG)ScriptingEngine
