@@ -39,7 +39,7 @@ CSG allignment = Vitamins.get("vexFlatSheet","Aluminum 5x15")
 				.rotz(90)
 				
 allignment=allignment
-			.movey(vexGrid*2)	
+			.movey(vexGrid*3)	
 			.movex(-vexGrid*2)	
 			.movez(	totalEncoder-printerOffset.getMM())
 
