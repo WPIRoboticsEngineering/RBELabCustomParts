@@ -27,6 +27,14 @@ CSG vshaft =  (CSG)ScriptingEngine
                         )
 				.toZMin()
 				.movez(-1)  
+CSG vshaftLong =  (CSG)ScriptingEngine
+	                    .gitScriptRun(
+                                "https://github.com/WPIRoboticsEngineering/RBELabCustomParts.git", // git location of the library
+	                              "vexShaft.groovy" , // file to load
+	                              [11+totalEncoder]
+                        )
+				.toZMin()
+				.movez(-1)
 CSG allignment = Vitamins.get("vexFlatSheet","Aluminum 5x15")	
 				.rotz(90)
 				
@@ -85,8 +93,15 @@ CSG bearingBracket =  core.difference(center).rotx(180)// fix the orentation
 			.toZMin()//move it down to the flat surface
 			.difference(allignment)
 			
-CSG pin =  core.intersect(center.movez(printerOffset.getMM()))
+CSG pin =  core.intersect(center.movez(printerOffset.getMM()*2))
 			.toZMin()
+			
+CSG passThrough = pin.difference(vshaftLong)	
+				
 
+CSG magnetVariant =CSG.unionAll([bearingBracket,pin])
+magnetVariant	.setName("magnetPin")
 
-return   CSG.unionAll([bearingBracket,pin])
+CSG patssThroughVariant =CSG.unionAll([bearingBracket,passThrough])
+patssThroughVariant	.setName("passThroughPin")
+return   [magnetVariant,patssThroughVariant]
