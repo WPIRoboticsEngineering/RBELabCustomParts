@@ -11,7 +11,7 @@ CSG encoderBearing = (CSG)ScriptingEngine
                      
 LengthParameter printerOffset 		= new LengthParameter("printerOffset",0.5,[1.2,0])                
 LengthParameter boltLen 		= new LengthParameter("Bolt Length",0.5,[1.2,0])                
-double shelThickness = 1			
+double shelThickness = 2		
 
 double vexGrid = (1.0/2.0)* 25.4
 double overEncoder = encoderBearing.getMaxZ()
@@ -27,8 +27,16 @@ CSG vshaft =  (CSG)ScriptingEngine
                         )
 				.toZMin()
 				.movez(-1)  
+CSG allignment = Vitamins.get("vexFlatSheet","Aluminum 5x15")	
+				.rotz(90)
+				
+allignment=allignment
+			.movey(vexGrid*2)	
+			.movex(-vexGrid*2)	
+			.movez(	totalEncoder-printerOffset.getMM())
+
 CSG bolt = Vitamins.get("capScrew","8#32")
-			.makeKeepaway(printerOffset.getMM())
+			.makeKeepaway(printerOffset.getMM()*1.5)
 			.movez(- printerOffset.getMM()/2 -0.5)
 			
 double headHeight =bolt.getMaxZ() 
@@ -75,6 +83,10 @@ CSG core = bearingLug
 		.intersect(new Cube(vexGrid*3,vexGrid*gridOffset*4,totalEncoder).toCSG().toZMin())
 CSG bearingBracket =  core.difference(center).rotx(180)// fix the orentation
 			.toZMin()//move it down to the flat surface
-CSG pin =  core.intersect(center)
+			.difference(allignment)
+			
+CSG pin =  core.intersect(center.movez(printerOffset.getMM()))
+			.toZMin()
 
-return   [bearingBracket,pin]
+
+return   CSG.unionAll([bearingBracket,pin])
