@@ -61,9 +61,14 @@ double gridOffset = 2
 CSG bolts = CSG.unionAll([totalBolt.movey(vexGrid*gridOffset),
 					totalBolt.movey(-vexGrid*gridOffset)])
 			.movez(totalEncoder+shelThickness)
-
+bolts=CSG.unionAll([bolts,
+				bolts.movex(vexGrid),
+				bolts.movex(-vexGrid)])
 CSG bearingLug=new Cylinder(bearingRadius+shelThickness,totalEncoder).toCSG() 
-CSG boltLug=new Cylinder(bolts.getMaxX()+shelThickness,totalEncoder).toCSG() 
+CSG boltLug=new Cylinder(3+shelThickness,totalEncoder).toCSG() 
+boltLug=CSG.unionAll([boltLug,
+				boltLug.movex(vexGrid),
+				boltLug.movex(-vexGrid)])
 
 double shaftflange = 9
 CSG center = new Cylinder(shaftflange-shelThickness,totalEncoder).toCSG()
