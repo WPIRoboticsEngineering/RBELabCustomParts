@@ -108,6 +108,8 @@ caseBottom.toZMin().movez(vitaminData.flangeThickness)
 .minkowskiDifference(vitaminFromScript,printerOffset.getMM())
 .difference(bolts)
 
+
+
 gearA.setMfg({toMfg ->
 	return toMfg.rotx(180)
 		.toZMin()
