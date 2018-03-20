@@ -17,7 +17,8 @@ HashMap<String, Object>  vitaminData = Vitamins.getConfiguration( "hobbyServo",s
 double washerThickness = 1
 
 CSG gearA = Vitamins.get( "vexGear",gearAParam.getStrValue())
-CSG vitaminFromScript = Vitamins.get("hobbyServo",servoparam.getStrValue());
+CSG vitaminFromScript = Vitamins.get("hobbyServo",servoparam.getStrValue())
+					.rotz(90)
 CSG horn = Vitamins.get("hobbyServoHorn",hornparam.getStrValue())
 				.rotx(180)
 				.movez(vitaminFromScript.getMaxZ())
@@ -90,6 +91,7 @@ CSG servoMpunt =new Cube(vitaminData.servoThinDimentionThickness,
 				.movey(vitaminData.shaftToShortSideDistance+(vitaminData.flangeLongDimention-vitaminData.servoThickDimentionThickness)/2)
 				.toZMin()
 				.movez(vitaminData.flangeThickness)
+				.rotz(90)
 CSG boltLugLower=new Cylinder(2+shellThickness,servomountTHickness).toCSG()  	
 		.movez(vitaminData.flangeThickness)
 
