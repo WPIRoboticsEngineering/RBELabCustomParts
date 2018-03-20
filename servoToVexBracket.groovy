@@ -18,7 +18,7 @@ double washerThickness = 1
 
 CSG gearA = Vitamins.get( "vexGear",gearAParam.getStrValue())
 CSG vitaminFromScript = Vitamins.get("hobbyServo",servoparam.getStrValue())
-					.rotz(90)
+					//.rotz(90)
 CSG horn = Vitamins.get("hobbyServoHorn",hornparam.getStrValue())
 				.rotx(180)
 				.movez(vitaminFromScript.getMaxZ())
@@ -77,10 +77,13 @@ CSG caseTop = bearingLug
 			.difference(pin.hull().makeKeepaway(shellThickness))
 			.difference(bearing.hull())
 			.difference(bolts)
+CSG gearKeepaway = CSG.unionAll([gearA.hull().makeKeepaway(1),
+							gearA.hull().makeKeepaway(1).movez(washerThickness),
+							gearA.hull().makeKeepaway(1).movez(-washerThickness)
+				])
 CSG caseBottom = boltLug.toZMax()
 				.movez(boltLug.getMinZ())
-				.difference(gearA.hull().makeKeepaway(1))
-				.difference(gearA.hull().makeKeepaway(1).movez(washerThickness))
+				.difference(gearKeepaway)
 				.difference(bolts)
 println vitaminData
 double servomountTHickness = vitaminData.bottomOfFlangeToTopOfBody-vitaminData.flangeThickness
@@ -91,7 +94,7 @@ CSG servoMpunt =new Cube(vitaminData.servoThinDimentionThickness,
 				.movey(vitaminData.shaftToShortSideDistance+(vitaminData.flangeLongDimention-vitaminData.servoThickDimentionThickness)/2)
 				.toZMin()
 				.movez(vitaminData.flangeThickness)
-				.rotz(90)
+				//.rotz(90)
 CSG boltLugLower=new Cylinder(2+shellThickness,servomountTHickness).toCSG()  	
 		.movez(vitaminData.flangeThickness)
 
@@ -101,12 +104,14 @@ boltLugLower=CSG.unionAll([boltLugLower,
 boltLugLower=CSG.unionAll([boltLugLower.movex(vexGrid*2),
 				boltLugLower.movex(-vexGrid*2)])
 				.hull()
-servoMpunt=servoMpunt.union(	boltLugLower).hull()					
+servoMpunt=servoMpunt.union(	boltLugLower).hull()	
+				
 caseBottom=CSG.unionAll([caseBottom,
 					servoMpunt,
 caseBottom.toZMin().movez(vitaminData.bottomOfFlangeToTopOfBody),
 caseBottom.toZMin().movez(vitaminData.flangeThickness)
-])
+]).hull()
+.difference(gearKeepaway)
 .minkowskiDifference(vitaminFromScript,printerOffset.getMM())
 .difference(bolts)
 
