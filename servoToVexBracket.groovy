@@ -35,12 +35,13 @@ CSG bolt = Vitamins.get("capScrew","8#32")
 CSG bearing = Vitamins.get("ballBearing",bearingSizeParam.getStrValue())
 			.makeKeepaway(printerOffset.getMM()/2)
 			.toZMin()
-			.movez(bearingSurface)
+			.movez(bearingSurface+washerThickness)
 
 
 CSG pin =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2),bearingData.width+shellThickness+washerThickness).toCSG() // a one line Cylinder
 			.movez(bearingSurface)
-CSG washer =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2)+3,washerThickness).toCSG() // a one line Cylinder
+CSG washer =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2)+2,washerThickness).toCSG() // a one line Cylinder
+			
 			.movez(bearingSurface)
 double topShellTHickness =bearingData.width+shellThickness
 CSG bearingLug=new Cylinder(bearingData.outerDiameter/2+shellThickness,topShellTHickness).toCSG() // a one line Cylinder
@@ -133,4 +134,4 @@ caseBottom.setMfg({toMfg ->
 gearA.setName("GearModule")
 caseTop.setName("caseTop")
 caseBottom.setName("caseBottom")
-return [gearA,caseTop,caseBottom]
+return [gearA,caseTop,caseBottom,bearing]
