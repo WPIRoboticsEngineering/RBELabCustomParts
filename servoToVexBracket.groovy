@@ -35,10 +35,10 @@ CSG bolt = Vitamins.get("capScrew","8#32")
 CSG bearing = Vitamins.get("ballBearing",bearingSizeParam.getStrValue())
 			.makeKeepaway(printerOffset.getMM()/2)
 			.toZMin()
-			.movez(bearingSurface+washerThickness)
+			.movez(bearingSurface+washerThickness+shellThickness)
 
 
-CSG pin =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2),bearingData.width+shellThickness+washerThickness).toCSG() // a one line Cylinder
+CSG pin =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2),bearingData.width+shellThickness+washerThickness-printerOffset.getMM()*2).toCSG() // a one line Cylinder
 			.movez(bearingSurface)
 CSG washer =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2)+2,washerThickness).toCSG() // a one line Cylinder
 			
@@ -73,11 +73,20 @@ gearA=gearA
 	.difference(vshaft)
 	.difference(bearing)
 	.difference(horn)
+CSG allignment = Vitamins.get("vexFlatSheet","Aluminum 5x15")	
+				.rotz(90)
+				
+allignment=allignment
+			.movey(vexGrid*3)	
+			.movex(-vexGrid*2)	
+			.movez(bearingLug.getMaxZ()-printerOffset.getMM())
+			
 CSG caseTop = bearingLug
 			.union(boltLug)
-			.difference(pin.hull().makeKeepaway(shellThickness))
+			.difference(pin.hull().makeKeepaway(shellThickness*3).movez(-printerOffset.getMM()*2))
 			.difference(bearing.hull())
 			.difference(bolts)
+			.difference(allignment)
 CSG gearKeepaway = CSG.unionAll([gearA.hull().makeKeepaway(1),
 							gearA.hull().makeKeepaway(1).movez(washerThickness),
 							gearA.hull().makeKeepaway(1).movez(-washerThickness)
@@ -134,4 +143,4 @@ caseBottom.setMfg({toMfg ->
 gearA.setName("GearModule")
 caseTop.setName("caseTop")
 caseBottom.setName("caseBottom")
-return [gearA,caseTop,caseBottom,bearing]
+return [gearA,caseTop,caseBottom]
