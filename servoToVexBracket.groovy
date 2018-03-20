@@ -106,8 +106,22 @@ caseBottom.toZMin().movez(vitaminData.bottomOfFlangeToTopOfBody),
 caseBottom.toZMin().movez(vitaminData.flangeThickness)
 ])
 .minkowskiDifference(vitaminFromScript,printerOffset.getMM())
+.difference(bolts)
 
+gearA.setMfg({toMfg ->
+	return toMfg.rotx(180)
+		.toZMin()
+})
+caseTop.setMfg({toMfg ->
+	return toMfg.rotx(180)
+		.toZMin()
+})
+caseBottom.setMfg({toMfg ->
+	return toMfg
+		.toZMin()
+})
 
-
-
-return [vitaminFromScript,gearA,caseTop,caseBottom]
+gearA.setName("GearModule")
+caseTop.setName("caseTop")
+caseBottom.setName("caseBottom")
+return [gearA,caseTop,caseBottom]
