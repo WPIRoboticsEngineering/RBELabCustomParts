@@ -86,10 +86,10 @@ CSG caseTop = bearingLug
 			.difference(pin.hull().makeKeepaway(shellThickness*3).movez(-printerOffset.getMM()*2))
 			.difference(bearing.hull())
 			.difference(bolts)
-			.difference(allignment)
+			.minkowskiDifference(allignment,printerOffset.getMM())
 CSG gearKeepaway = CSG.unionAll([gearA.hull().makeKeepaway(1),
-							gearA.hull().makeKeepaway(1).movez(washerThickness),
-							gearA.hull().makeKeepaway(1).movez(-washerThickness)
+							gearA.getBoundingBox().makeKeepaway(1).movez(washerThickness),
+							gearA.getBoundingBox().makeKeepaway(1).movez(-washerThickness)
 				])
 CSG caseBottom = boltLug.toZMax()
 				.movez(boltLug.getMinZ())
