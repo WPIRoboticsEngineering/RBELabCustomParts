@@ -96,7 +96,7 @@ CSG core = bearingLug
 		.intersect(new Cube(vexGrid*3,vexGrid*gridOffset*4,totalEncoder).toCSG().toZMin())
 CSG bearingBracket =  core.difference(center).rotx(180)// fix the orentation
 			.toZMin()//move it down to the flat surface
-			.difference(allignment)
+			.minkowskiDifference(allignment,printerOffset.getMM())
 			
 CSG pin =  core.intersect(center.movez(printerOffset.getMM()*2))
 			.toZMin()
