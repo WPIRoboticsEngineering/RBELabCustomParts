@@ -37,12 +37,15 @@ CSG bearing = Vitamins.get("ballBearing",bearingSizeParam.getStrValue())
 			.toZMin()
 			.movez(bearingSurface+washerThickness+shellThickness)
 
-
-CSG pin =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2),bearingData.width+shellThickness+washerThickness-printerOffset.getMM()*2).toCSG() // a one line Cylinder
+double pinRadius =bearingData.innerDiameter/2-(printerOffset.getMM()/2)
+CSG pin =new Cylinder(pinRadius,bearingData.width+shellThickness+washerThickness-printerOffset.getMM()*2).toCSG() // a one line Cylinder
 			.movez(bearingSurface)
-CSG washer =new Cylinder(bearingData.innerDiameter/2-(printerOffset.getMM()/2)+2,washerThickness).toCSG() // a one line Cylinder
-			
-			.movez(bearingSurface)
+double washerRadius = bearingData.innerDiameter/2-(printerOffset.getMM()/2)+2
+CSG washer =new Cylinder(washerRadius,washerThickness+shellThickness).toCSG() // a one line Cylinder
+			.movez(bearingSurface-shellThickness)
+CSG flange =new Cylinder(washerRadius+1,washerThickness).toCSG() // a one line Cylinder
+			.toZMax()
+			.movez(bearingSurface-shellThickness)			
 double topShellTHickness =bearingData.width+shellThickness
 CSG bearingLug=new Cylinder(bearingData.outerDiameter/2+shellThickness,topShellTHickness).toCSG() // a one line Cylinder
 			.movez(bearingSurface+washerThickness)
@@ -63,16 +66,39 @@ bolts=CSG.unionAll([bolts,
 				bolts.movey(-vexGrid)])
 			.movez(bearingSurface+10)		
 double bottomOfGear = vitaminData.bottomOfFlangeToTopOfBody+1
+
+CSG pinSection =CSG.unionAll([washer,pin,flange])
+				.difference(bearing)
+
+pinSection=pinSection
+	.intersect(
+		pinSection
+		.getBoundingBox()
+		.movey(-pinRadius*0.75)
+		)
+	.intersect(
+		pinSection
+		.getBoundingBox()
+		.movey(pinRadius*0.75)
+		)
+CSG cutter =pinSection.toolOffset(printerOffset.getMM())
+
 gearA=gearA
 	.toZMax()
 	.movez(bearingSurface)
 	.union(gearA
 			.toZMin()
 			.movez(bottomOfGear))
-	.union([washer,pin])
-	.difference(vshaft)
-	.difference(bearing)
 	.difference(horn)
+double gearThickness = gearA.getTotalZ()
+
+for(double i=0;i<gearThickness+washerThickness*2;i+=washerThickness){
+	gearA=gearA.difference(cutter.movez(-i))
+		
+}
+
+pinSection=pinSection.difference(vshaft)
+
 CSG allignment = Vitamins.get("vexFlatSheet","Aluminum 5x15")	
 				.rotz(90)
 				
@@ -125,14 +151,17 @@ caseBottom.toZMin().movez(vitaminData.flangeThickness)
 .minkowskiDifference(vitaminFromScript,printerOffset.getMM())
 .difference(bolts)
 
-
+pinSection.setMfg({toMfg ->
+	return toMfg.rotx(90)
+		.toZMin()
+})
 
 gearA.setMfg({toMfg ->
 	return toMfg.rotx(180)
 		.toZMin()
 })
 caseTop.setMfg({toMfg ->
-	return toMfg.rotx(180)
+	return toMfg
 		.toZMin()
 })
 caseBottom.setMfg({toMfg ->
@@ -143,4 +172,5 @@ caseBottom.setMfg({toMfg ->
 gearA.setName("GearModule")
 caseTop.setName("caseTop")
 caseBottom.setName("caseBottom")
-return [gearA,caseTop,caseBottom]
+pinSection.setName("pinSection")
+return [gearA,pinSection,caseTop,caseBottom]
