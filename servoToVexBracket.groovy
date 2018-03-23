@@ -35,12 +35,12 @@ class ServoBoxMaker{
 		                        )
 		               .movez(bearingSurface)
 		boltLength.setMM(100)                       
-		CSG bolt = Vitamins.get("capScrew","8#32")
+		CSG bolt = Vitamins.get("capScrew","8#32").toolOffset(printerOffset.getMM()).rotz(45)
 		CSG bearing = Vitamins.get("ballBearing",bearingSizeParam.getStrValue())
 				.scalez(1.1)
 				.makeKeepaway(printerOffset.getMM()/2)
 				.toZMin()
-				.movez(bearingSurface+washerThickness+shellThickness-printerOffset.getMM())
+				.movez(bearingSurface+washerThickness+shellThickness)
 				
 	
 		double pinRadius =bearingData.innerDiameter/2
@@ -74,7 +74,7 @@ class ServoBoxMaker{
 		double bottomOfGear = vitaminData.bottomOfFlangeToTopOfBody+1
 		
 		CSG pinSection =CSG.unionAll([washer,pin,flange])
-						.difference(bearing)
+						.difference(bearing.movez(-printerOffset.getMM()))
 		
 		pinSection=pinSection
 			.intersect(
@@ -116,7 +116,7 @@ class ServoBoxMaker{
 		CSG caseTop = bearingLug
 					.union(boltLug)
 					.difference(pin.hull().makeKeepaway(shellThickness*3).movez(-printerOffset.getMM()*2))
-					.difference(bearing.hull())
+					.difference(bearing.movez(-printerOffset.getMM()).hull())
 					.difference(bolts)
 					.minkowskiDifference(allignment,printerOffset.getMM())
 		CSG gearKeepaway = CSG.unionAll([gearA.hull().makeKeepaway(1),
