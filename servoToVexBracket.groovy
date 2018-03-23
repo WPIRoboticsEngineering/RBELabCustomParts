@@ -23,6 +23,7 @@ class ServoBoxMaker{
 		CSG vitaminFromScript = Vitamins.get("hobbyServo",servoparam.getStrValue())
 							.rotz(servoAngle.getMM())
 		CSG horn = Vitamins.get("hobbyServoHorn",hornparam.getStrValue())
+						.toolOffset(printerOffset.getMM())
 						.rotx(180)
 						.movez(vitaminFromScript.getMaxZ())
 		double bearingSurface = horn.getMaxZ()+2
@@ -36,15 +37,17 @@ class ServoBoxMaker{
 		boltLength.setMM(100)                       
 		CSG bolt = Vitamins.get("capScrew","8#32")
 		CSG bearing = Vitamins.get("ballBearing",bearingSizeParam.getStrValue())
+				.scalez(1.1)
 				.makeKeepaway(printerOffset.getMM()/2)
 				.toZMin()
-				.movez(bearingSurface+washerThickness+shellThickness)
+				.movez(bearingSurface+washerThickness+shellThickness-printerOffset.getMM())
+				
 	
-		double pinRadius =bearingData.innerDiameter/2-(printerOffset.getMM()/2)
+		double pinRadius =bearingData.innerDiameter/2
 		CSG pin =new Cylinder(pinRadius,bearingData.width+shellThickness+washerThickness-printerOffset.getMM()*2).toCSG() // a one line Cylinder
 					.movez(bearingSurface)
 		double washerRadius = bearingData.innerDiameter/2-(printerOffset.getMM()/2)+2
-		CSG washer =new Cylinder(washerRadius,washerThickness+shellThickness).toCSG() // a one line Cylinder
+		CSG washer =new Cylinder(washerRadius,washerThickness+shellThickness*2).toCSG() // a one line Cylinder
 					.movez(bearingSurface-shellThickness)
 		CSG flange =new Cylinder(washerRadius+1,washerThickness).toCSG() // a one line Cylinder
 					.toZMax()
@@ -117,14 +120,14 @@ class ServoBoxMaker{
 					.difference(bolts)
 					.minkowskiDifference(allignment,printerOffset.getMM())
 		CSG gearKeepaway = CSG.unionAll([gearA.hull().makeKeepaway(1),
-									gearA.getBoundingBox().makeKeepaway(1).movez(washerThickness),
-									gearA.getBoundingBox().makeKeepaway(1).movez(-washerThickness)
+									gearA.getBoundingBox().toolOffset(2).movez(washerThickness),
+									gearA.getBoundingBox().toolOffset(2).movez(-washerThickness)
 						])
 		CSG caseBottom = boltLug.toZMax()
 						.movez(boltLug.getMinZ())
 						.difference(gearKeepaway)
 						.difference(bolts)
-		//println vitaminData
+		// println vitaminData
 		double servomountTHickness = vitaminData.bottomOfFlangeToTopOfBody-vitaminData.flangeThickness
 		CSG servoMpunt =new Cube(vitaminData.servoThinDimentionThickness,
 						vitaminData.flangeLongDimention,
