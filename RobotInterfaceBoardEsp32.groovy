@@ -206,10 +206,10 @@ class BoardMaker{
 						.difference(frontBottom)
 		double vexGrid = 1.0/2.0*25.4
 		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
-						.intersect(new Cube(vexGrid*8).toCSG())
+						.intersect(new Cube(vexGrid*7).toCSG())
 						.rotz(-90)
-						.movey(	-caseOutSet+caseRounding)	
-						.movex(-caseOutSet+caseRounding-boardConnects)
+						.movey(	-caseOutSet+caseRounding+vexGrid/2)	
+						.movex(-caseOutSet+caseRounding-boardConnects-vexGrid/2)
 						.movez(		frontBottom.getMinZ())	
 		CSG vexMountB = vexMount.movex(vexGrid*7)
 						.union(	vexMount)				
@@ -223,15 +223,17 @@ class BoardMaker{
 							.movez(-caseRounding*2)
 							.toYMin()
 							.movex(boardX/2)
-		
+							
+		CSG allvexbits = vexMountB.union(backVex)
+						.toYMin()
+						.movey(frontBottom.getMinY())
 		CSG backBottom = basicLug
 						.toYMin()
 						.union(usbkeepaway)
 						.movey(backeOfCaseY)
-
 						.difference(board)	
-						.union(backVex)
-		frontBottom=frontBottom.union(vexMountB)
+						.union(allvexbits)
+
 		CSG backTop = basicLug	
 						.scalez(2)
 						.toZMin()
