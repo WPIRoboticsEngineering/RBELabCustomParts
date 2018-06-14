@@ -13,7 +13,7 @@ class BoardMaker{
 	static double ioKaX =63.7
 	static double ioKaY =48.79
 	static double ioKaZ =17.67
-	static double lowerKeepaway = 1.75
+	static double lowerKeepaway = 6.3
 	static double holeCornerInset = 1.8+1.5
 	static double boardConnects = 2.3
 	static double usbThickness = 6.75
@@ -240,7 +240,7 @@ class BoardMaker{
 						.hull()
 						.union(usbkeepaway.movey(backeOfCaseY))
 						.union(	wirekeepaway)	
-						.difference(board)
+						.difference(fullBoard)
 		double vexGrid = 1.0/2.0*25.4
 		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
 						.intersect(new Cube(vexGrid*7.5).toCSG())
