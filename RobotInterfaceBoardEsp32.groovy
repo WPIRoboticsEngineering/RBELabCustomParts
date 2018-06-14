@@ -251,30 +251,30 @@ class BoardMaker{
 		CSG vexMountB = vexMount.movex(vexGrid*7)
 						.union(	vexMount)				
 		CSG backVex = vexMountB
-						.movey(vexGrid*4)
+						.movey(vexGrid*3)
 		CSG allvexbits = vexMountB.union(backVex)
 						.toYMin()
 						.movey(backBottom.getMinY())	
 		backBottom=	backBottom	
 			.union(allvexbits)
+		println "Performing keepaway opperation ..."
+		def fullBoardMink =CSG.unionAll(fullBoard.minkowski(new Cube(printerOffset.getMM()).toCSG()))
+		def backBottomMink =CSG.unionAll(backBottom.minkowski(new Cube(printerOffset.getMM()).toCSG()))
+		println "keepaway Done!"
 		CSG frontTop = basicLug	
 						.scalez(2)
 						.toZMin()
 						.movez(-caseRounding*2)
-						.difference(fullBoard)
-						.difference(backBottom)	
-						//.minkowskiDifference(fullBoard,printerOffset.getMM())
-						//.minkowskiDifference(backBottom,printerOffset.getMM())	
+						.difference(fullBoardMink)
+						.difference(backBottomMink)	
 		CSG backTop = basicLug	
 						.scalez(2)
 						.toZMin()
 						.movez(-caseRounding*2)
 						.toYMin()
 						.movey(backeOfCaseY)
-						.difference(fullBoard)	
-						.difference(backBottom)	
-						//.minkowskiDifference(fullBoard,printerOffset.getMM())	
-						//.minkowskiDifference(backBottom,printerOffset.getMM())	
+						.difference(fullBoardMink)	
+						.difference(backBottomMink)	
 		CSG bottom = backBottom			
 		bottom.setManufacturing({ toMfg ->
 			return toMfg
