@@ -19,8 +19,8 @@ class BoardMaker{
 	static double usbThickness = 6.75
 	static double wireHeight = 5
 	static double wireRadius = 1.5
-	static double negativeWireOffset = 3
-	static double positiveWireOffset = 7
+	static double negativeWireOffset = 3-3.5
+	static double positiveWireOffset = 7+3.5
 	static double caseOutSet = 4
 	static double powerKeepawayOffset=53.21
 	static double usbHeight=11.06
@@ -107,7 +107,20 @@ class BoardMaker{
 						.movez(-(boardZ+lowerKeepaway))
 						.movey(-cutoutDepth+boardY)
 						.movex(1.8)
-		CSG switchkeepaway = new Cube(17,10.6,ioKaZ+boardZ+lowerKeepaway).toCSG()
+		CSG fusekeepaway = new Cube(24,9,ioKaZ+boardZ+lowerKeepaway+10).toCSG()
+						.toXMin()
+						.toYMin()
+						.toZMin()
+						.movez(-(boardZ+lowerKeepaway))
+						.movey(IOkeepaway.getMinY())
+						.movex(1.63)
+		CSG electronicsKeepaway = new Cube(30,19.4,3.2+(boardZ+lowerKeepaway)).toCSG()
+						.toXMin()
+						.toYMin()
+						.toZMin()
+						.movez(-(boardZ+lowerKeepaway))
+						.movex(fusekeepaway.getMaxX()-6)
+		CSG switchkeepaway = new Cube(17,10.6,ioKaZ+boardZ+lowerKeepaway+10).toCSG()
 						.toXMax()
 						.toYMin()
 						.toZMin()
@@ -130,18 +143,19 @@ class BoardMaker{
 				.movez(-wireRadius)
 				.rotx(-90)
 				.movez(wireHeight)
-		CSG wirekeepaway = new Cube(positiveWireOffset+wireRadius*4,boardConnects,wireHeight).toCSG()
+		CSG wirekeepaway = new Cube(positiveWireOffset+wireRadius*6,boardConnects,wireHeight).toCSG()
 							.toXMax()
 							.toZMin()
 							.toYMax()
-							.movex(wireRadius)
+							.movex(wireRadius+3.5)
 		CSG powerkeepaway = new Cube(17.84,19.79,10.43+boardZ+lowerKeepaway).toCSG()
 						.toXMax()
+						.movex(3.5)
 						.toYMin()
 						.toZMin()
 						.movez(-(boardZ+lowerKeepaway))
-						.union(wire.rotz(-20).movex(-negativeWireOffset))
-						.union(wire.rotz(20).movex(-positiveWireOffset))
+						.union(wire.movex(-negativeWireOffset))
+						.union(wire.movex(-positiveWireOffset))
 						.union(wirekeepaway)
 						.movex(powerKeepawayOffset)
 		CSG usbCord = new Cylinder(2.0,40).toCSG()
@@ -165,8 +179,8 @@ class BoardMaker{
 						.movey(-cutoutDepth+boardY)
 						.movex(boardX/2)
 						.movez(usbHeight)
-		
-		return [wiiConnect,mainBoard,IOkeepaway,switchkeepaway,powerkeepaway,usbkeepaway]
+		//return electronicsKeepaway
+		return [wiiConnect,mainBoard,IOkeepaway,switchkeepaway,powerkeepaway,usbkeepaway,fusekeepaway,electronicsKeepaway]
 	}
 	def makeCase(){
 		def board =makeBoard()
@@ -270,4 +284,4 @@ class BoardMaker{
 		return board
 	}
 }
-return new BoardMaker().makeCase()
+return new BoardMaker().makeBoard()
