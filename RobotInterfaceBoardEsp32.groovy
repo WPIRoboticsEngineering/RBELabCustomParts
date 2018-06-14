@@ -59,10 +59,18 @@ class BoardMaker{
 					.toCSG()
 					.toZMax()	
 					.toYMax()
-					.movey(wiiBody.getMinY())		
+					.movey(wiiBody.getMinY())	
+		CSG wiiNotch = new Cube(	14.75,// X dimention
+					5,// Y dimention
+					2//  Z dimention
+					)
+					.toCSG()
+					.toZMin()
+					.movez(3.3)
+					.movey(-0.5)				
 		wiiConnect=wiiConnect
 				.difference(cutout)		
-				.union([wiiBody,wiiClip])
+				.union([wiiBody,wiiClip,wiiNotch])
 				
 				
 		return wiiConnect	
@@ -120,6 +128,7 @@ class BoardMaker{
 						.toZMin()
 						.movez(-(boardZ+lowerKeepaway))
 						.movex(fusekeepaway.getMaxX()-6)
+						.difference(wiiConnect.intersect(wiiConnect.getBoundingBox().toYMin()).hull())
 		CSG switchkeepaway = new Cube(17,10.6,ioKaZ+boardZ+lowerKeepaway+10).toCSG()
 						.toXMax()
 						.toYMin()
@@ -207,28 +216,13 @@ class BoardMaker{
 						.movey(-caseOutSet)
 						.toXMin()
 						.movex(-caseOutSet-boardConnects)
-		CSG frontBottom = basicLug	
-						.union(	wirekeepaway)	
-						.difference(board)	
+						
+					
 		CSG fullBoard = CSG.unionAll(board)
-		CSG frontTop = basicLug	
-						.scalez(1.6)
-						.toZMin()
-						.movez(-caseRounding*2)
-						.minkowskiDifference(fullBoard,printerOffset.getMM())
-						.minkowskiDifference(frontBottom,printerOffset.getMM())
-						.difference(frontBottom)
-		double vexGrid = 1.0/2.0*25.4
-		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
-						.intersect(new Cube(vexGrid*7.5).toCSG())
-						.rotz(-90)
-						.movey(	-caseOutSet+caseRounding+vexGrid/2)	
-						.movex(-caseOutSet+caseRounding-boardConnects-vexGrid/2)
-						.movez(		frontBottom.getMinZ())	
-		CSG vexMountB = vexMount.movex(vexGrid*7)
-						.union(	vexMount)				
-		CSG backVex = vexMountB
-						.movey(vexGrid*4)
+		
+						
+						
+		
 		double backeOfCaseY = boardY-	cutoutDepth
 		CSG usbkeepaway = new RoundedCube(13+caseRounding*2,frontCaseDepth,usbHeight+caseRounding*2+usbThickness/2)
 							.cornerRadius(caseRounding)
@@ -238,26 +232,50 @@ class BoardMaker{
 							.toYMin()
 							.movex(boardX/2)
 							
-		CSG allvexbits = vexMountB.union(backVex)
-						.toYMin()
-						.movey(frontBottom.getMinY())
+		
 		CSG backBottom = basicLug
 						.toYMin()
-						.union(usbkeepaway)
 						.movey(backeOfCaseY)
-						.difference(board)	
-						.union(allvexbits)
-
+						.union(basicLug)
+						.hull()
+						.union(usbkeepaway.movey(backeOfCaseY))
+						.union(	wirekeepaway)	
+						.difference(board)
+		double vexGrid = 1.0/2.0*25.4
+		CSG vexMount = Vitamins.get( "vexFlatSheet","Aluminum 1x5")		
+						.intersect(new Cube(vexGrid*7.5).toCSG())
+						.rotz(-90)
+						.movey(	-caseOutSet+caseRounding+vexGrid/2)	
+						.movex(-caseOutSet+caseRounding-boardConnects-vexGrid/2)
+						.movez(		backBottom.getMinZ())	
+		CSG vexMountB = vexMount.movex(vexGrid*7)
+						.union(	vexMount)				
+		CSG backVex = vexMountB
+						.movey(vexGrid*4)
+		CSG allvexbits = vexMountB.union(backVex)
+						.toYMin()
+						.movey(backBottom.getMinY())	
+		backBottom=	backBottom	
+			.union(allvexbits)
+		CSG frontTop = basicLug	
+						.scalez(2)
+						.toZMin()
+						.movez(-caseRounding*2)
+						.difference(fullBoard)
+						.difference(backBottom)	
+						//.minkowskiDifference(fullBoard,printerOffset.getMM())
+						//.minkowskiDifference(backBottom,printerOffset.getMM())	
 		CSG backTop = basicLug	
 						.scalez(2)
 						.toZMin()
 						.movez(-caseRounding*2)
 						.toYMin()
 						.movey(backeOfCaseY)
-						.minkowskiDifference(fullBoard,printerOffset.getMM())	
-						.minkowskiDifference(backBottom,printerOffset.getMM())	
+						.difference(fullBoard)	
 						.difference(backBottom)	
-		CSG bottom = frontBottom.union(backBottom)				
+						//.minkowskiDifference(fullBoard,printerOffset.getMM())	
+						//.minkowskiDifference(backBottom,printerOffset.getMM())	
+		CSG bottom = backBottom			
 		bottom.setManufacturing({ toMfg ->
 			return toMfg
 					.toXMin()
@@ -284,4 +302,4 @@ class BoardMaker{
 		return board
 	}
 }
-return new BoardMaker().makeBoard()
+return new BoardMaker().makeCase()
