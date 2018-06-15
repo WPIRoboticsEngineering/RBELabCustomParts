@@ -120,7 +120,7 @@ class BoardMaker{
 						.toYMin()
 						.toZMin()
 						.movez(-(boardZ+lowerKeepaway))
-						.movey(IOkeepaway.getMinY())
+						.movey(IOkeepaway.getMinY()-1.9)
 						.movex(1.63)
 		CSG electronicsKeepaway = new Cube(30,19.4,3.2+(boardZ+lowerKeepaway)).toCSG()
 						.toXMin()
@@ -302,4 +302,4 @@ class BoardMaker{
 		return board
 	}
 }
-return new BoardMaker().makeCase()
+return new BoardMaker().makeBoard()
