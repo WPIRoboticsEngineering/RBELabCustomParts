@@ -61,13 +61,14 @@ class BoardMaker{
 					.toYMax()
 					.movey(wiiBody.getMinY())	
 		CSG wiiNotch = new Cube(	14.75,// X dimention
-					5,// Y dimention
-					2//  Z dimention
+					2.5,// Y dimention
+					2.8//  Z dimention
 					)
 					.toCSG()
 					.toZMin()
-					.movez(3.3)
-					.movey(-0.5)				
+					.toYMin()
+					.movez(wiiConnect.getMaxZ()-4.4)
+					.movey(wiiConnect.getMinY()+2)				
 		wiiConnect=wiiConnect
 				.difference(cutout)		
 				.union([wiiBody,wiiClip,wiiNotch])
