@@ -302,4 +302,4 @@ class BoardMaker{
 		return board
 	}
 }
-return new BoardMaker().makeBoard()
+return new BoardMaker().makeCase()
