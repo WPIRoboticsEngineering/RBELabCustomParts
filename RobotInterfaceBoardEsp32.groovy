@@ -16,13 +16,13 @@ class BoardMaker{
 	static double lowerKeepaway = 6.3
 	static double holeCornerInset = 1.8+1.5
 	static double boardConnects = 2.3
-	static double usbThickness = 6.75
+	static double usbThickness = 8
 	static double wireHeight = 5
 	static double wireRadius = 1.5
 	static double negativeWireOffset = 3-3.5
 	static double positiveWireOffset = 7+3.5
 	static double caseOutSet = 4
-	static double powerKeepawayOffset=53.21
+	static double powerKeepawayOffset=56.6
 	static double usbHeight=11.06
 	static LengthParameter	printerOffset 		= new LengthParameter("Printer Offset",0.6,[1.75,0])
 
@@ -178,7 +178,7 @@ class BoardMaker{
 						.toZMin()
 						.movey(27.75)
 						
-		CSG usbkeepaway = new RoundedCube(11.05,12.6,usbThickness)
+		CSG usbkeepaway = new RoundedCube(10.4,20.73,usbThickness)
 						.cornerRadius(1)
 						.toCSG()
 						.toYMin()
