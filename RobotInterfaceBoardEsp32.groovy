@@ -189,8 +189,16 @@ class BoardMaker{
 						.movey(-cutoutDepth+boardY)
 						.movex(boardX/2)
 						.movez(usbHeight)
+		def lightPipe = new Cylinder(1.5,100).toCSG()	
+		def v5Power = lightPipe.move(41.21,2.8,0)
+		def fused = lightPipe.move(36.26,10,0)
+		def vcc = lightPipe.move(44.65,8.6,0)
 		//return electronicsKeepaway
-		return [wiiConnect,mainBoard,IOkeepaway,switchkeepaway,powerkeepaway,usbkeepaway,fusekeepaway,electronicsKeepaway]
+		return [wiiConnect,mainBoard,IOkeepaway,switchkeepaway,powerkeepaway,usbkeepaway,fusekeepaway,electronicsKeepaway,
+		v5Power,
+		fused,
+		vcc
+		]
 	}
 	def makeCase(){
 		def board =makeBoard()
