@@ -275,11 +275,12 @@ class BoardMaker{
 		def backBottomMink =CSG.unionAll(backBottom.minkowski(new Cube(printerOffset.getMM()).toCSG()))
 		println "keepaway Done!"
 		double caseheight = 20
-		def rounding = new Cylinder(basicLug.getTotalX()*0.65, // Radius at the bottom
+		def rounding = makeRoundedCyl(
                       		basicLug.getTotalX()*0.65, // Radius at the top
                       		backBottom.getTotalY(), // Height
-                      		(int)80 //resolution
-                      		).toCSG()
+                      		caseRounding,
+                      		(int)60 //resolution
+                      		)
                       		.rotx(90)
                       		.movey(basicLug.getMinY())
                       		.movex(boardX/2)
@@ -327,6 +328,23 @@ class BoardMaker{
 		return caseParts
 		board.addAll(caseParts)
 		return board
+	}
+	def makeRoundedCyl(def rad,def height, def corner,def resolution){
+		def minHeight = height-corner*2
+		def cylParts =[]
+		for(int i=0;i<(resolution/4);i++){
+			def radInc = rad-corner+Math.sin(Math.PI/2*((double)i/(double)(resolution/4)))*corner
+			def heightInc = (Math.cos(Math.PI/2*((double)i/(double)(resolution/4)))*corner)
+			cylParts.add(
+				new Cylinder(radInc, // Radius at the bottom
+                      		radInc, // Radius at the top
+                      		heightInc*2+minHeight, // Height
+                      		(int)resolution //resolution
+                      		).toCSG()
+                      		.movez(-heightInc)
+			)
+		}
+		return CSG.unionAll(cylParts).hull().toZMin()
 	}
 }
 return new BoardMaker().makeCase()
