@@ -279,7 +279,7 @@ class BoardMaker{
                       		basicLug.getTotalX()*0.65, // Radius at the top
                       		backBottom.getTotalY(), // Height
                       		caseRounding,
-                      		(int)60 //resolution
+                      		(int)80 //resolution
                       		)
                       		.rotx(90)
                       		.movey(basicLug.getMinY())
@@ -332,9 +332,10 @@ class BoardMaker{
 	def makeRoundedCyl(def rad,def height, def corner,def resolution){
 		def minHeight = height-corner*2
 		def cylParts =[]
-		for(int i=0;i<(resolution/4);i++){
-			def radInc = rad-corner+Math.sin(Math.PI/2*((double)i/(double)(resolution/4)))*corner
-			def heightInc = (Math.cos(Math.PI/2*((double)i/(double)(resolution/4)))*corner)
+		def divisor = 4
+		for(int i=0;i<(resolution/divisor);i++){
+			def radInc = rad-corner+Math.sin(Math.PI/2*((double)i/(double)(resolution/divisor)))*corner
+			def heightInc = (Math.cos(Math.PI/2*((double)i/(double)(resolution/divisor)))*corner)
 			cylParts.add(
 				new Cylinder(radInc, // Radius at the bottom
                       		radInc, // Radius at the top
