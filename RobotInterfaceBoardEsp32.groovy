@@ -313,14 +313,14 @@ class BoardMaker{
 			return toMfg
 					.toXMin()
 					.toYMin()
-					.roty(180)
+					.rotx(-90)
 					.toZMin()
 		})		
 		backTop.setManufacturing({ toMfg ->
 			return toMfg
 					.toXMin()
 					.toYMin()
-					.roty(180)
+					.rotx(90)
 					.toZMin()
 		})										
 		def caseParts = [bottom,frontTop,backTop]
