@@ -71,7 +71,9 @@ class BoardMaker{
 					.movey(wiiConnect.getMinY()+2)				
 		wiiConnect=wiiConnect
 				.difference(cutout)		
-				.union([wiiBody,wiiClip,wiiNotch])
+				.union([wiiBody,
+				//wiiClip,
+				wiiNotch])
 				
 				
 		return wiiConnect	
@@ -205,7 +207,9 @@ class BoardMaker{
 		
 		double frontCaseDepth = -cutoutDepth+boardY-ioKaY-caseRounding+3
 		double lowerCaseDepth = Math.abs(board[0].getMinZ())
-		
+		if(lowerCaseDepth<(lowerKeepaway+3)){
+			lowerCaseDepth=lowerKeepaway+3
+		}
 		CSG wirekeepaway = new RoundedCube(positiveWireOffset+wireRadius*8,caseOutSet-boardConnects,wireHeight+caseRounding*2)
 							.cornerRadius(caseRounding)
 							.toCSG()
@@ -270,20 +274,34 @@ class BoardMaker{
 		def fullBoardMink =CSG.unionAll(fullBoard.minkowski(new Cube(printerOffset.getMM()).toCSG()))
 		def backBottomMink =CSG.unionAll(backBottom.minkowski(new Cube(printerOffset.getMM()).toCSG()))
 		println "keepaway Done!"
-		CSG frontTop = basicLug	
-						.scalez(2.2)
+		double caseheight = 20
+		def rounding = new Cylinder(basicLug.getTotalX()*0.75, // Radius at the bottom
+                      		basicLug.getTotalX()*0.75, // Radius at the top
+                      		backBottom.getTotalY(), // Height
+                      		(int)80 //resolution
+                      		).toCSG()
+                      		.rotx(90)
+                      		.movey(basicLug.getMinY())
+                      		.movex(boardX/2)
+                      		.toZMax()
+                      		.movez(caseheight+caseRounding)
+		CSG frontTop = basicLug.union(basicLug.toZMax().movez(	caseheight))
+						.hull()
 						.toZMin()
 						.movez(-caseRounding*2)
+						.intersect(rounding)
 						.difference(fullBoardMink)
 						.difference(backBottomMink)	
-		CSG backTop = basicLug	
-						.scalez(2.2)
+		CSG backTop = basicLug.union(basicLug.toZMax().movez(	caseheight))
+						.hull()
 						.toZMin()
 						.movez(-caseRounding*2)
 						.toYMin()
 						.movey(backeOfCaseY)
+						.intersect(rounding)
 						.difference(fullBoardMink)	
 						.difference(backBottomMink)	
+						
 		CSG bottom = backBottom			
 		bottom.setManufacturing({ toMfg ->
 			return toMfg
