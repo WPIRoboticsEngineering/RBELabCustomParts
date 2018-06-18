@@ -53,7 +53,7 @@ class BoardMaker{
 					.toCSG()
 					.toZMax()
 		CSG wiiClip = new Cube(	17.9,// X dimention
-					4.62,// Y dimention
+					6.62,// Y dimention
 					5//  Z dimention
 					)
 					.toCSG()
