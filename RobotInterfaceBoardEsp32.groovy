@@ -332,10 +332,10 @@ class BoardMaker{
 	def makeRoundedCyl(def rad,def height, def corner,def resolution){
 		def minHeight = height-corner*2
 		def cylParts =[]
-		def divisor = 4
-		for(int i=0;i<(resolution/divisor);i++){
-			def radInc = rad-corner+Math.sin(Math.PI/2*((double)i/(double)(resolution/divisor)))*corner
-			def heightInc = (Math.cos(Math.PI/2*((double)i/(double)(resolution/divisor)))*corner)
+		def divisor = 6
+		for(int i=0;i<divisor;i++){
+			def radInc = rad-corner+Math.sin(Math.PI/2*((double)i/(double)divisor))*corner
+			def heightInc = (Math.cos(Math.PI/2*((double)i/(double)(divisor)))*corner)
 			cylParts.add(
 				new Cylinder(radInc, // Radius at the bottom
                       		radInc, // Radius at the top
