@@ -93,7 +93,7 @@ class BoardMaker{
 						.toZMax()
 						.move(-boardConnects,-boardConnects,0)
 		
-		CSG mainBoardCutout = new RoundedCube(33.0,cutoutDepth+cutoutRadius,boardZ+cutoutRadius*2)
+		CSG mainBoardCutout = new RoundedCube(34.0,cutoutDepth+cutoutRadius,boardZ+cutoutRadius*2)
 						.cornerRadius(cutoutRadius)
 						.toCSG()
 						.toYMax()
