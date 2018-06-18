@@ -25,7 +25,7 @@ class BoardMaker{
 	static double powerKeepawayOffset=56.6
 	static double usbHeight=11.06
 	static LengthParameter	printerOffset 		= new LengthParameter("Printer Offset",0.6,[1.75,0])
-
+	double caseRounding = 2
 	def makeWiiConnector(){
 		CSG wiiConnect = new RoundedCube(	wiiConnectorWidth,// X dimention
 					wiiConnectorThickness,// Y dimention
@@ -129,7 +129,7 @@ class BoardMaker{
 						.toZMin()
 						.movez(-(boardZ+lowerKeepaway))
 						.movex(fusekeepaway.getMaxX()-6)
-						.difference(wiiConnect.intersect(wiiConnect.getBoundingBox().toYMin()).hull())
+						.difference(wiiConnect.intersect(wiiConnect.getBoundingBox().toYMin()))
 		CSG switchkeepaway = new Cube(17,10.6,ioKaZ+boardZ+lowerKeepaway+10).toCSG()
 						.toXMax()
 						.toYMin()
@@ -202,7 +202,7 @@ class BoardMaker{
 	}
 	def makeCase(){
 		def board =makeBoard()
-		double caseRounding = 1
+		
 		double frontCaseDepth = -cutoutDepth+boardY-ioKaY-caseRounding+3
 		double lowerCaseDepth = Math.abs(board[0].getMinZ())
 		
@@ -271,13 +271,13 @@ class BoardMaker{
 		def backBottomMink =CSG.unionAll(backBottom.minkowski(new Cube(printerOffset.getMM()).toCSG()))
 		println "keepaway Done!"
 		CSG frontTop = basicLug	
-						.scalez(2)
+						.scalez(2.2)
 						.toZMin()
 						.movez(-caseRounding*2)
 						.difference(fullBoardMink)
 						.difference(backBottomMink)	
 		CSG backTop = basicLug	
-						.scalez(2)
+						.scalez(2.2)
 						.toZMin()
 						.movez(-caseRounding*2)
 						.toYMin()
