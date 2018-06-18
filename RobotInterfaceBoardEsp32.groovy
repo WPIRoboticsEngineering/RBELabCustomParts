@@ -72,7 +72,7 @@ class BoardMaker{
 		wiiConnect=wiiConnect
 				.difference(cutout)		
 				.union([wiiBody,
-				//wiiClip,
+				wiiClip,
 				wiiNotch])
 				
 				
@@ -275,8 +275,8 @@ class BoardMaker{
 		def backBottomMink =CSG.unionAll(backBottom.minkowski(new Cube(printerOffset.getMM()).toCSG()))
 		println "keepaway Done!"
 		double caseheight = 20
-		def rounding = new Cylinder(basicLug.getTotalX()*0.75, // Radius at the bottom
-                      		basicLug.getTotalX()*0.75, // Radius at the top
+		def rounding = new Cylinder(basicLug.getTotalX()*0.65, // Radius at the bottom
+                      		basicLug.getTotalX()*0.65, // Radius at the top
                       		backBottom.getTotalY(), // Height
                       		(int)80 //resolution
                       		).toCSG()
