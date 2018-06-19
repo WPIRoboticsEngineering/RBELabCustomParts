@@ -277,7 +277,7 @@ class BoardMaker{
 		double caseheight = 20
 		def rounding = makeRoundedCyl(
                       		basicLug.getTotalX()*0.65, // Radius at the top
-                      		backBottom.getTotalY(), // Height
+                      		basicLug.getTotalY(), // Height
                       		caseRounding,
                       		(int)80 //resolution
                       		)
@@ -297,9 +297,9 @@ class BoardMaker{
 						.hull()
 						.toZMin()
 						.movez(-caseRounding*2)
+						.intersect(rounding)
 						.toYMin()
 						.movey(backeOfCaseY)
-						.intersect(rounding)
 						.difference(fullBoardMink)	
 						.difference(backBottomMink)	
 						
