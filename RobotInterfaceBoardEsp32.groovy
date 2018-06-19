@@ -195,11 +195,19 @@ class BoardMaker{
 		def v5Power = lightPipe.move(41.21,2.8,0)
 		def fused = lightPipe.move(36.26,10,0)
 		def vcc = lightPipe.move(44.65,8.6,0)
+		def screwTerm = lightPipe.union(lightPipe.rotx(-90))
+		def point1 = 0.1*25.4
+		screwTerm =screwTerm .union(screwTerm.movex(point1))
+					.movez(wireHeight)
+					.movey(point1)
+					.movex(powerKeepawayOffset-positiveWireOffset*0.5-point1/2)
+		
 		//return electronicsKeepaway
 		return [wiiConnect,mainBoard,IOkeepaway,switchkeepaway,powerkeepaway,usbkeepaway,fusekeepaway,electronicsKeepaway,
 		v5Power,
 		fused,
-		vcc
+		vcc,
+		screwTerm
 		]
 	}
 	def makeCase(){
@@ -348,4 +356,4 @@ class BoardMaker{
 		return CSG.unionAll(cylParts).hull().toZMin()
 	}
 }
-return new BoardMaker().makeCase()
+return new BoardMaker().makeBoard()
