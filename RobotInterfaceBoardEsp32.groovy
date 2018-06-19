@@ -173,7 +173,7 @@ class BoardMaker{
 		CSG usbCord = new Cylinder(2.0,40).toCSG()
 						.rotx(90)
 						.movez(usbThickness/2)
-		CSG usbCordkeepaway = new RoundedCube(7,1,usbThickness)
+		CSG usbCordkeepaway = new RoundedCube(6,1,usbThickness)
 						.cornerRadius(1)
 						.toCSG()
 						.toYMax()
@@ -236,7 +236,7 @@ class BoardMaker{
 						
 						
 		
-		double backeOfCaseY = boardY-	cutoutDepth
+		double backeOfCaseY = boardY-	cutoutDepth+printerOffset.getMM()*2
 		CSG usbkeepaway = new RoundedCube(13+caseRounding*2,frontCaseDepth,usbHeight+caseRounding*2+usbThickness/2)
 							.cornerRadius(caseRounding)
 							.toCSG()
@@ -276,7 +276,7 @@ class BoardMaker{
 		println "keepaway Done!"
 		double caseheight = 20
 		def rounding = makeRoundedCyl(
-                      		basicLug.getTotalX()*0.65, // Radius at the top
+                      		basicLug.getTotalX()*0.60, // Radius at the top
                       		basicLug.getTotalY(), // Height
                       		caseRounding,
                       		(int)80 //resolution
