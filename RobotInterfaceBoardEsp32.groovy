@@ -105,7 +105,7 @@ class BoardMaker{
 						.movex(boardX/2)
 		mainBoard=mainBoard.difference(mainBoardCutout)
 		
-		CSG antenna = new Cube(21.85,7,13.69+boardZ+lowerKeepaway).toCSG()
+		CSG antenna = new Cube(21.85,7,13.69+boardZ+lowerKeepaway+1).toCSG()
 					.toYMax()
 					.toZMin()
 					.movey(-ioKaY)
