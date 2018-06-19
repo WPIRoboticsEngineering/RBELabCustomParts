@@ -195,7 +195,7 @@ class BoardMaker{
 		def v5Power = lightPipe.move(41.21,2.8,0)
 		def fused = lightPipe.move(36.26,10,0)
 		def vcc = lightPipe.move(44.65,8.6,0)
-		def screwTerm = lightPipe.union(lightPipe.rotx(-90))
+		def screwTerm = new Cube(4,4,100).toCSG().toZMin().union(new Cube(3,3,100).toCSG().toZMin().rotx(-90))
 		def point1 = 0.1*25.4
 		screwTerm =screwTerm .union(screwTerm.movex(point1))
 					.movez(wireHeight)
@@ -356,4 +356,4 @@ class BoardMaker{
 		return CSG.unionAll(cylParts).hull().toZMin()
 	}
 }
-return new BoardMaker().makeBoard()
+return new BoardMaker().makeCase()
