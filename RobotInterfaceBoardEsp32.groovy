@@ -150,11 +150,11 @@ class BoardMaker{
 			.union(hole.move(holeCornerInset,boardY-holeCornerInset,0))
 			.union(hole.move(boardX-holeCornerInset,boardY-holeCornerInset,0))
 			.union(hole.move(boardX-holeCornerInset,holeCornerInset,0))
-		
+		def WireActualPartLine= wireHeight-caseRounding
 		CSG wire = new Cylinder(wireRadius,40).toCSG()
 				.movez(-wireRadius)
 				.rotx(-90)
-				.movez(wireHeight)
+				.movez(WireActualPartLine)
 		CSG wirekeepaway = new Cube(positiveWireOffset+wireRadius*6,boardConnects,wireHeight).toCSG()
 							.toXMax()
 							.toZMin()
@@ -198,7 +198,7 @@ class BoardMaker{
 		def screwTerm = new Cube(4,4,100).toCSG().toZMin().union(new Cube(1.5,1.5,100).toCSG().toZMin().rotx(-90))
 		def point1 = 0.1*25.4
 		screwTerm =screwTerm .union(screwTerm.movex(point1))
-					.movez(wireHeight)
+					.movez(WireActualPartLine)
 					.movey(point1)
 					.movex(powerKeepawayOffset-positiveWireOffset*0.5-point1/2)
 		
@@ -218,8 +218,7 @@ class BoardMaker{
 		if(lowerCaseDepth<(lowerKeepaway+3)){
 			lowerCaseDepth=lowerKeepaway+3
 		}
-		CSG wirekeepaway = new RoundedCube(positiveWireOffset+wireRadius*8,caseOutSet-boardConnects,wireHeight+caseRounding*2)
-							.cornerRadius(caseRounding)
+		CSG wirekeepaway = new RoundedCube(positiveWireOffset+wireRadius*8,caseOutSet-boardConnects,wireHeight+4)
 							.toCSG()
 							.toXMax()
 							.toZMin()
