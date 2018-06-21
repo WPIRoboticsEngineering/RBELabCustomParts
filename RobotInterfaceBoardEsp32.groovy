@@ -25,7 +25,7 @@ class BoardMaker{
 	static double powerKeepawayOffset=56.6
 	static double usbHeight=11.06
 	static LengthParameter	printerOffset 		= new LengthParameter("Printer Offset",0.6,[1.75,0])
-	double caseRounding = 2
+	double caseRounding = 4
 	def makeWiiConnector(){
 		CSG wiiConnect = new RoundedCube(	wiiConnectorWidth,// X dimention
 					wiiConnectorThickness,// Y dimention
@@ -195,7 +195,7 @@ class BoardMaker{
 		def v5Power = lightPipe.move(41.21,2.8,0)
 		def fused = lightPipe.move(36.26,10,0)
 		def vcc = lightPipe.move(44.65,8.6,0)
-		def screwTerm = new Cube(4,4,100).toCSG().toZMin().union(new Cube(3,3,100).toCSG().toZMin().rotx(-90))
+		def screwTerm = new Cube(4,4,100).toCSG().toZMin().union(new Cube(2.5,2.5,100).toCSG().toZMin().rotx(-90))
 		def point1 = 0.1*25.4
 		screwTerm =screwTerm .union(screwTerm.movex(point1))
 					.movez(wireHeight)
@@ -267,15 +267,21 @@ class BoardMaker{
 						.intersect(new Cube(vexGrid*7.5).toCSG())
 						.rotz(-90)
 						.movey(	-caseOutSet+caseRounding+vexGrid/2)	
-						.movex(-caseOutSet+caseRounding-boardConnects-vexGrid/2)
+						.movex(-caseOutSet+2-boardConnects-vexGrid/2)
 						.movez(		backBottom.getMinZ())	
+		vexMount=vexMount.movey(vexGrid*2)
+					.union(vexMount)
 		CSG vexMountB = vexMount.movex(vexGrid*7)
-						.union(	vexMount)				
-		CSG backVex = vexMountB
-						.movey(vexGrid*3)
-		CSG allvexbits = vexMountB.union(backVex)
+		def vexAttach = vexMount.union(vexMountB)
+						.hull()
+						.difference([vexMount.hull(),vexMountB.hull()])
+						
+		def allvexbits = CSG.unionAll([vexMountB,
+						vexMount,
+						vexAttach
+						])
 						.toYMin()
-						.movey(backBottom.getMinY())	
+						.movey(backBottom.getMinY()+caseRounding)	
 		backBottom=	backBottom	
 			.union(allvexbits)
 		println "Performing keepaway opperation ..."
