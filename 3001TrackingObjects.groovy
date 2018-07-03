@@ -28,10 +28,9 @@ double coasterThickness= 11.76
 CSG coaster =new Cylinder(25,25,coasterThickness,(int)30).toCSG() // a one line Cylinder
 				.toZMax()
 				.difference(boltKeepaway)
-CSG calibration = new Cylinder(sphereRad,sphereRad,thickness.getMM(),(int)30).toCSG() // a one line Cylinder
+CSG calibration = bolt // a one line Cylinder
 				.toZMax()
 				.movez(-coasterThickness)
-				.difference(boltKeepaway)
 CSG coloredObject = simpleSyntax.union(sphere)
 					.difference(boltKeepaway)
 CSG calibrationCoaster=coaster.union(calibration)

@@ -130,7 +130,7 @@ class BoardMaker{
 						.toYMin()
 						.toZMin()
 						.movez(-(boardZ+lowerKeepaway))
-						.movex(fusekeepaway.getMaxX()-6)
+						.movex(wiiConnect.getMaxX()-7.5)
 						.difference(wiiConnect.intersect(wiiConnect.getBoundingBox().toYMin()))
 		CSG switchkeepaway = new Cube(20,10.6,ioKaZ+boardZ+lowerKeepaway+10).toCSG()
 						.toXMax()
