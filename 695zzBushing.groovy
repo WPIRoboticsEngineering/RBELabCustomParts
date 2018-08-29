@@ -13,6 +13,6 @@ CSG profile = new Cylinder(halfRad-offset, // Radius at the bottom
                       		).toCSG()//convert to CSG to display   
 profile=profile.union(profile.rotx(180).movez(h))
 
-def outerRace =outer.difference( profile.makeKeepaway(offset*2).movez(offset))
+def outerRace =outer.difference( profile.makeKeepaway(offset*1.5).movez(offset))
 def innerRace = outer.intersect( profile).difference(hole)
 return CSG.unionAll([outerRace,innerRace])
