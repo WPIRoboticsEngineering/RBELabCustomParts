@@ -15,4 +15,4 @@ profile=profile.union(profile.rotx(180).movez(h))
 
 def outerRace =outer.difference( profile.makeKeepaway(offset*2).movez(offset))
 def innerRace = outer.intersect( profile).difference(hole)
-return[outerRace,innerRace]
+return CSG.unionAll([outerRace,innerRace])
