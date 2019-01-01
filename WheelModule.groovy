@@ -75,7 +75,7 @@ def wheelCore = new Cylinder(sweepCenter,wheelSectionThickness).toCSG()
 def wheelwell = new Cylinder(sweepCenter+width,wheelSectionThickness+gearBThickness).toCSG()
 			.roty(-90)
 			.movez(  bevelGears.get(3))
-			.movex( -wheelSectionThickness-bevelGears.get(2))			
+			.movex( -wheelSectionThickness-bevelGears.get(2)-gearBThickness/2)			
 tire=tire .movez(  bevelGears.get(3))
 		.movex( wheelCenterlineX)
 bearing=bearing
@@ -97,7 +97,7 @@ def motorPlate = new Cube(boltlen.getMM(),motorY,motorToMountPlane).toCSG()
 				.movey(motorBlank.getMinY())
 				.toZMax()
 def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()
-def baseSupportRad = 15
+def baseSupportRad = 17
 def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		boltData.outerDiameter/2+1, // Radius at the top
                       		leftHeight, // Height
@@ -164,5 +164,42 @@ def sideWallBarL = new Cube(sideWallTHickness,motorY,motorToMountPlane).toCSG()
 				.movey(motorBlank.getMinY())
 				.toZMax()
 				.union([sideWallPuckR,mountWallBarR]).hull()  
-def backPlate =  mountWallBarR.union(   mountWallBarL).hull()              		      		
-return [motorBlank,shaftBlank,tire,outputGear,adrive,bearing,bearing2,wheelCore,axelBolt,motorPlate,leftCone,rightCone,sideWallBarL,sideWallBarR,backPlate]
+def backPlate =  mountWallBarR.union(   mountWallBarL).hull()   
+def gearHole =  new Cylinder(bevelGears.get(0).getMaxX()+1,motorToMountPlane).toCSG() 
+				.toZMax()     
+def bracket = CSG.unionAll([motorPlate,leftCone,rightCone,sideWallBarL,sideWallBarR,backPlate
+
+])  .difference([axelBolt,wheelwell,motorBlank,gearHole
+
+])	
+
+def wheelAsmb = CSG.unionAll([adrive,wheelCore
+]).difference([axelBolt,tire,bearing,bearing2
+
+])
+
+def driveGear = outputGear.difference(shaftBlank)
+wheelAsmb.setName("wheel")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.roty(-90)
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
+
+bracket.setName("bracket")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
+driveGear.setName("driveGear")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
+return [driveGear,bracket,wheelAsmb]
