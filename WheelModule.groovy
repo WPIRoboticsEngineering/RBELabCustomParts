@@ -283,6 +283,7 @@ for(int i=0;i<6;i++)
 		nutsertGridPlate.add(netmoverV.movex(mm(0.5)*i+5)
 				   .movey(mm(0.5)*j*7+gridUnits+5))
 }
+standoffPart=	standoffPart.difference(	[movedCastor,nutsertGridPlate])	
 
 wheelAsmb=driveSection[3]
 bracketm=driveSection[2].difference(nutsertGridPlate)
