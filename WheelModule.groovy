@@ -340,7 +340,7 @@ driveGear.setName("driveGear")
 			.toYMin()
 			.toZMin()
 })
-driveGearl.setName("driveGear")
+driveGearl.setName("driveGear left")
 	.setManufacturing({ toMfg ->
 	return toMfg.rotx(90)
 			.toXMin()
@@ -372,6 +372,9 @@ tirel.setManufacturing({ toMfg ->
 	return null
 })
 motorBlankl.setManufacturing({ toMfg ->
+	return null
+})
+motorBlank.setManufacturing({ toMfg ->
 	return null
 })
 println "BottomOfPlate = "+BottomOfPlate
