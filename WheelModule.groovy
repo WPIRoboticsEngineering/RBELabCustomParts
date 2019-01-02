@@ -1,11 +1,27 @@
 //Your code here
 int depth=1
 double gridUnits = 25
+double wheelbase=gridUnits*3
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
 def mm(def inches){
 	return inches*25.4
 }
+def castor(){
+	new Sphere(15.8/2)// Spheres radius
+				.toCSG()
+				.toZMax()
+				.movez(20)
+	.union([CSG.unionAll([new Cylinder(32/2,13).toCSG(),
+		new Cylinder(5,13).toCSG().movex(38/2),
+		new Cylinder(5,13).toCSG().movex(-38/2)
+		]).hull(),
+		new Cylinder(1.5,10).toCSG().toZMax().movex(38/2),
+		new Cylinder(1.5,10).toCSG().toZMax().movex(-38/2)
+		])
+		.rotx(180)
+}	
+
 double washerThick = 1
 def motorOptions = []
 def shaftOptions = []
@@ -221,8 +237,65 @@ def wheelAsmb = CSG.unionAll([adrive,wheelCore
 
 ])
 def driveGear = outputGear.difference([shaftBlank,motorBlank])
-def bracketm=bracket.mirrorx().movex(60)
+def bracketm=bracket.mirrorx().movex(wheelbase+wheelCenterlineX*2)
 // Attach production scripts
+
+driveSection= [driveGear,bracket, bracketm,wheelAsmb,tire,motorBlank].collect{
+	it.move(-wheelCenterlineX,tire.getMaxY(),- bevelGears.get(3))
+	.rotx(-90)
+	}
+def cast = castor()
+double BottomOfPlate=driveSection[1].getMaxZ()
+double castorStandoff = cast.getMinZ()
+double standoffHeight = BottomOfPlate+castorStandoff
+def standoffPart =CSG.unionAll([ 	new Cylinder(15,standoffHeight).toCSG().movex( gridUnits*0.5),
+							new Cylinder(15,standoffHeight).toCSG().movex( -gridUnits*0.5)
+				]).hull()
+				.toZMax()
+				.difference([	nutsert.toZMax().movex( gridUnits*0.5),
+							nutsert.toZMax().movex( -gridUnits*0.5),
+							
+				])
+				.movez(BottomOfPlate)
+				.movex( gridUnits*1.5)
+				.movey(gridUnits*5)
+def movedCastor =cast.toZMin()
+				.movex( gridUnits*1.5)
+				.movey(gridUnits*5)
+standoffPart=	standoffPart.difference(	movedCastor)	
+
+
+def nutsertGridPlate= []
+def netmoverP= new Cylinder(5.0/2,standoffHeight/2).toCSG()
+			.toZMin()
+			.movez(BottomOfPlate)
+def netmoverV= new Cylinder(3/2,standoffHeight).toCSG()
+			.toZMin()
+			.movez(BottomOfPlate-10)
+for(int i=0;i<6;i++)
+	for(int j=0;j<4;j++){
+		nutsertGridPlate.add(netmoverP.movey(gridUnits*i)
+				   .movex(gridUnits*j))
+}
+
+for(int i=0;i<6;i++)
+	for(int j=0;j<2;j++){
+		nutsertGridPlate.add(netmoverV.movex(mm(0.5)*i+5)
+				   .movey(mm(0.5)*j*7+gridUnits+5))
+}
+
+wheelAsmb=driveSection[3]
+bracketm=driveSection[2].difference(nutsertGridPlate)
+bracket=driveSection[1].difference(nutsertGridPlate)
+driveGear=driveSection[0]
+
+def plate =  new Cube(gridUnits*4,gridUnits*6,mm(1.0/4.0)).toCSG()
+				.toZMin()
+				.toXMin()
+				.toYMin()
+				.move(-gridUnits/2,-gridUnits/2,BottomOfPlate)
+				.difference(nutsertGridPlate)
+
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
 	return toMfg
@@ -253,4 +326,5 @@ driveGear.setName("driveGear")
 			.toYMin()
 			.toZMin()
 })
-return [driveGear,bracket, bracketm,wheelAsmb,wheelMountGrid]
+println "BottomOfPlate = "+BottomOfPlate
+return [driveGear,bracket, bracketm,wheelAsmb, movedCastor,standoffPart,plate]
