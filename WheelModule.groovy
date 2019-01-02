@@ -1,7 +1,7 @@
 //Your code here
 int depth=1
 double gridUnits = 25
-double wheelbase=gridUnits*3
+def wheelbase=gridUnits*3
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
 def mm(def inches){
@@ -375,11 +375,14 @@ motorBlankl.setManufacturing({ toMfg ->
 	return null
 })
 println "BottomOfPlate = "+BottomOfPlate
+
 parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank]
+return parts
+println "Making a single STL assembly..."
 def singleSTL = CSG.unionAll(parts)
 singleSTL.setName("fullAssembly_DO_NOT_PRINT")
 singleSTL.setManufacturing({ toMfg ->
-	return toMfg.movex(-wheelBase/2)
+	return toMfg.movex(-wheelbase/2)
 })
 parts.add(singleSTL)
 return parts
