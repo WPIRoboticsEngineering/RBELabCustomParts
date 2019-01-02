@@ -1,5 +1,6 @@
 //Your code here
-
+int depth=1
+double gridUnits = 25
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
 def mm(def inches){
@@ -46,8 +47,8 @@ String size ="M5"
 HashMap<String, Object>  boltData = Vitamins.getConfiguration( "capScrew",size)
 def bolt =new Cylinder(boltData.outerDiameter/2+printerOffset.getMM()/2,boltlen.getMM()).toCSG()
 double nursertHeight = 9.5
-double nutsertRad = 6.4/2
-def netsert=new Cylinder(nutsertRad,nursertHeight ).toCSG() 
+double nutsertRad = 6.4/2+printerOffset.getMM()/2
+def nutsert=new Cylinder(nutsertRad,nursertHeight ).toCSG() 
 
 double pitch = 3
 int atheeth =16
@@ -86,17 +87,42 @@ bearing=bearing
 bearing2 = bearing.movex(bearing.getTotalX() -gearBThickness-wheelSectionThickness)
 CSG outputGear = bevelGears.get(0)
 CSG adrive = bevelGears.get(1)
+
+def nutsertGrid= []
+def netmover= nutsert
+			.roty(90)
+
+for(int i=-depth;i<=depth;i++)
+	for(int j=-depth;j<=depth;j++){
+		if(i==0&&j==0)
+			continue
+		nutsertGrid.add(netmover.movey(gridUnits*i)
+				   .movez(gridUnits*j))
+	}
+def nutGrid = CSG.unionAll(nutsertGrid)
 def axelBolt = bolt
 			.movez(-boltlen.getMM()/2)
 			.roty(-90)
 			.movez(  bevelGears.get(3))
 			.movex(motorBlank.getCenterX() )
+
 def motorY = sweepCenter+width+nursertHeight +Math.abs(motorBlank.getMinY())
 def motorPlate = new Cube(boltlen.getMM(),motorY,motorToMountPlane).toCSG()
 				.movex(motorBlank.getCenterX() )
 				.toYMin()
 				.movey(motorBlank.getMinY())
 				.toZMax()
+def axelMount = nutsert
+			.roty(90)
+			.movez(  bevelGears.get(3))
+			.movex(motorPlate.getMaxX() )
+def lSideGrid = nutGrid
+			.movez(  bevelGears.get(3))
+			.movex(motorPlate.getMaxX() )
+def rSideGrid = nutGrid
+			.movez(  bevelGears.get(3))
+			.rotz(180)
+			.movex(motorPlate.getMinX() )			
 def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()-washerThick
 def baseSupportRad = 17
 def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
@@ -166,14 +192,28 @@ def sideWallBarL = new Cube(sideWallTHickness,motorY,motorToMountPlane).toCSG()
 				.toZMax()
 				.union([sideWallPuckR,mountWallBarR]).hull()  
 def backPlate =  mountWallBarR.union(   mountWallBarL).hull()   
+
+def wheelMountHole = nutsert
+			.roty(90)
+			.rotz(-90)
+			.movez(  bevelGears.get(3))
+			.movey(motorPlate.getMaxY() )
+			.movex( wheelCenterlineX)
+def wheelMountGrid = nutGrid
+			.rotz(-90)
+			.movez(  bevelGears.get(3))
+			.movey(motorPlate.getMaxY() )
+			.movex( wheelCenterlineX)		
 def gearHole =  new Cylinder(bevelGears.get(0).getMaxX()+1,motorToMountPlane).toCSG() 
 				.toZMax()     
 
 // FInal assembly section				
 def bracket = CSG.unionAll([motorPlate,leftCone,rightCone,sideWallBarL,sideWallBarR,backPlate
 
-])  .difference([axelBolt,wheelwell,motorBlank,gearHole
-
+])  .difference([axelBolt,wheelwell,motorBlank,gearHole,
+axelMount,
+wheelMountHole,
+lSideGrid,rSideGrid,wheelMountGrid
 ])	
 
 def wheelAsmb = CSG.unionAll([adrive,wheelCore
@@ -181,6 +221,7 @@ def wheelAsmb = CSG.unionAll([adrive,wheelCore
 
 ])
 def driveGear = outputGear.difference([shaftBlank,motorBlank])
+def bracketm=bracket.mirrorx().movex(60)
 // Attach production scripts
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
@@ -191,6 +232,13 @@ wheelAsmb.setName("wheel")
 			.toZMin()
 })
 
+bracketm.setName("bracket-m")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
 bracket.setName("bracket")
 	.setManufacturing({ toMfg ->
 	return toMfg
@@ -205,4 +253,4 @@ driveGear.setName("driveGear")
 			.toYMin()
 			.toZMin()
 })
-return [driveGear,bracket,wheelAsmb]
+return [driveGear,bracket, bracketm,wheelAsmb,wheelMountGrid]
