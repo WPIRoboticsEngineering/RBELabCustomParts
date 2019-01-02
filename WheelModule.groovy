@@ -283,8 +283,8 @@ for(int i=0;i<6;i++)
 		nutsertGridPlate.add(netmoverV.movex(mm(0.5)*i+5)
 				   .movey(mm(0.5)*j*7+gridUnits+5))
 }
-standoffPart=	standoffPart.difference(	[movedCastor,nutsertGridPlate])	
-
+standoffPart=	standoffPart.difference(	movedCastor)	
+			.difference(	nutsertGridPlate)	
 wheelAsmb=driveSection[3]
 bracketm=driveSection[2].difference(nutsertGridPlate)
 bracket=driveSection[1].difference(nutsertGridPlate)
@@ -300,7 +300,7 @@ def plate =  new Cube(gridUnits*4,gridUnits*6,mm(1.0/4.0)).toCSG()
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
 	return toMfg
-			.roty(-90)
+			.roty(90)
 			.toXMin()
 			.toYMin()
 			.toZMin()
@@ -308,24 +308,42 @@ wheelAsmb.setName("wheel")
 
 bracketm.setName("bracket-m")
 	.setManufacturing({ toMfg ->
-	return toMfg
+	return toMfg.rotx(90)
 			.toXMin()
 			.toYMin()
 			.toZMin()
 })
 bracket.setName("bracket")
 	.setManufacturing({ toMfg ->
-	return toMfg
+	return toMfg.rotx(90)
 			.toXMin()
 			.toYMin()
 			.toZMin()
 })
 driveGear.setName("driveGear")
 	.setManufacturing({ toMfg ->
+	return toMfg.rotx(90)
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
+standoffPart.setName("standoffPart")
+	.setManufacturing({ toMfg ->
 	return toMfg
 			.toXMin()
 			.toYMin()
 			.toZMin()
+})
+plate.addExportFormat("svg")// make an svg of the object
+plate.setName("plate")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
+movedCastor.setManufacturing({ toMfg ->
+	return null
 })
 println "BottomOfPlate = "+BottomOfPlate
 return [driveGear,bracket, bracketm,wheelAsmb, movedCastor,standoffPart,plate]
