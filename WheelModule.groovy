@@ -289,6 +289,12 @@ wheelAsmb=driveSection[3]
 bracketm=driveSection[2].difference(nutsertGridPlate)
 bracket=driveSection[1].difference(nutsertGridPlate)
 driveGear=driveSection[0]
+tire = driveSection[4]
+motorBlank = driveSection[5]
+def driveGearl = driveGear.mirrorx().movex(wheelbase)
+def wheelAsmbl = wheelAsmb.mirrorx().movex(wheelbase)
+def tirel = tire.mirrorx().movex(wheelbase)
+def motorBlankl=motorBlank.mirrorx().movex(wheelbase)
 
 def plate =  new Cube(gridUnits*4,gridUnits*6,mm(1.0/4.0)).toCSG()
 				.toZMin()
@@ -305,7 +311,14 @@ wheelAsmb.setName("wheel")
 			.toYMin()
 			.toZMin()
 })
-
+wheelAsmbl.setName("wheel left")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.roty(-90)
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
 bracketm.setName("bracket-m")
 	.setManufacturing({ toMfg ->
 	return toMfg.rotx(90)
@@ -321,6 +334,13 @@ bracket.setName("bracket")
 			.toZMin()
 })
 driveGear.setName("driveGear")
+	.setManufacturing({ toMfg ->
+	return toMfg.rotx(90)
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
+driveGearl.setName("driveGear")
 	.setManufacturing({ toMfg ->
 	return toMfg.rotx(90)
 			.toXMin()
@@ -345,5 +365,21 @@ plate.setName("plate")
 movedCastor.setManufacturing({ toMfg ->
 	return null
 })
+tire.setManufacturing({ toMfg ->
+	return null
+})
+tirel.setManufacturing({ toMfg ->
+	return null
+})
+motorBlankl.setManufacturing({ toMfg ->
+	return null
+})
 println "BottomOfPlate = "+BottomOfPlate
-return [driveGear,bracket, bracketm,wheelAsmb, movedCastor,standoffPart,plate]
+parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank]
+def singleSTL = CSG.unionAll(parts)
+singleSTL.setName("fullAssembly_DO_NOT_PRINT")
+singleSTL.setManufacturing({ toMfg ->
+	return toMfg.movex(-wheelBase/2)
+})
+parts.add(singleSTL)
+return parts
