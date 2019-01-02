@@ -5,6 +5,7 @@ LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,
 def mm(def inches){
 	return inches*25.4
 }
+double washerThick = 1
 def motorOptions = []
 def shaftOptions = []
 for(String vitaminsType: Vitamins.listVitaminTypes()){
@@ -20,7 +21,7 @@ StringParameter shafts = new StringParameter("Shaft Type","dShaft",shaftOptions)
 StringParameter motorSize = new StringParameter("Motor Size","WPI-gb37y3530-50en",Vitamins.listVitaminSizes(motors.getStrValue()))
 StringParameter shaftSize = new StringParameter("Shaft Size","WPI-gb37y3530-50en",Vitamins.listVitaminSizes(shafts.getStrValue()))
 
-def motorBlank= Vitamins.get(motors.getStrValue(),motorSize.getStrValue()).rotz(90)
+def motorBlank= Vitamins.get(motors.getStrValue(),motorSize.getStrValue()).rotz(180)
 def shaftBlank= Vitamins.get(shafts.getStrValue(),shaftSize.getStrValue())
 
 double motorToMountPlane = motorBlank.getMaxZ()
@@ -75,7 +76,7 @@ def wheelCore = new Cylinder(sweepCenter,wheelSectionThickness).toCSG()
 def wheelwell = new Cylinder(sweepCenter+width,wheelSectionThickness+gearBThickness).toCSG()
 			.roty(-90)
 			.movez(  bevelGears.get(3))
-			.movex( -wheelSectionThickness-bevelGears.get(2)-gearBThickness/2)			
+			.movex( -wheelSectionThickness-bevelGears.get(2)-washerThick)			
 tire=tire .movez(  bevelGears.get(3))
 		.movex( wheelCenterlineX)
 bearing=bearing
@@ -96,7 +97,7 @@ def motorPlate = new Cube(boltlen.getMM(),motorY,motorToMountPlane).toCSG()
 				.toYMin()
 				.movey(motorBlank.getMinY())
 				.toZMax()
-def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()
+def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()-washerThick
 def baseSupportRad = 17
 def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		boltData.outerDiameter/2+1, // Radius at the top
@@ -107,7 +108,7 @@ def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		.toXMax()
                       		.movex(motorPlate.getMaxX())
                       		.movez(  bevelGears.get(3))
-def rightHeight = Math.abs(motorPlate.getMinX()-wheelwell.getMinX())-printerOffset.getMM()
+def rightHeight = Math.abs(motorPlate.getMinX()-wheelwell.getMinX())-printerOffset.getMM()-washerThick
 def rightCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		boltData.outerDiameter/2+1, // Radius at the top
                       		rightHeight, // Height
@@ -117,7 +118,7 @@ def rightCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		.toXMin()
                       		.movex(motorPlate.getMinX())
                       		.movez(  bevelGears.get(3))	
-def  sideWallTHickness=motorPlate.getMaxX()-bevelGears.get(0).getMaxX()-2
+def  sideWallTHickness=motorPlate.getMaxX()-bevelGears.get(0).getMaxX()-5
 
 def sideWallPuckL = new Cylinder(baseSupportRad, // Radius at the bottom
                       		baseSupportRad, // Radius at the top
@@ -167,6 +168,8 @@ def sideWallBarL = new Cube(sideWallTHickness,motorY,motorToMountPlane).toCSG()
 def backPlate =  mountWallBarR.union(   mountWallBarL).hull()   
 def gearHole =  new Cylinder(bevelGears.get(0).getMaxX()+1,motorToMountPlane).toCSG() 
 				.toZMax()     
+
+// FInal assembly section				
 def bracket = CSG.unionAll([motorPlate,leftCone,rightCone,sideWallBarL,sideWallBarR,backPlate
 
 ])  .difference([axelBolt,wheelwell,motorBlank,gearHole
@@ -177,8 +180,8 @@ def wheelAsmb = CSG.unionAll([adrive,wheelCore
 ]).difference([axelBolt,tire,bearing,bearing2
 
 ])
-
-def driveGear = outputGear.difference(shaftBlank)
+def driveGear = outputGear.difference([shaftBlank,motorBlank])
+// Attach production scripts
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
 	return toMfg
