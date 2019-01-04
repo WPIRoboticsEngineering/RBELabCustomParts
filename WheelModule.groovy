@@ -139,7 +139,7 @@ def rSideGrid = nutGrid
 			.movez(  bevelGears.get(3))
 			.rotz(180)
 			.movex(motorPlate.getMinX() )			
-def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()-washerThick
+def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()
 def baseSupportRad = 17
 def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		boltData.outerDiameter/2+1, // Radius at the top
