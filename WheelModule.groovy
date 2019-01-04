@@ -378,7 +378,7 @@ motorBlank.setManufacturing({ toMfg ->
 	return null
 })
 println "BottomOfPlate = "+BottomOfPlate
-
+println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank]
 return parts
 println "Making a single STL assembly..."
