@@ -248,8 +248,8 @@ def cast = castor()
 double BottomOfPlate=driveSection[1].getMaxZ()
 double castorStandoff = cast.getMinZ()
 double standoffHeight = BottomOfPlate+castorStandoff
-def standoffPart =CSG.unionAll([ 	new Cylinder(15,standoffHeight).toCSG().movex( gridUnits*0.5),
-							new Cylinder(15,standoffHeight).toCSG().movex( -gridUnits*0.5)
+def standoffPart =CSG.unionAll([ 	new Cylinder(gridUnits/2,standoffHeight).toCSG().movex( gridUnits*0.5),
+							new Cylinder(gridUnits/2,standoffHeight).toCSG().movex( -gridUnits*0.5)
 				]).hull()
 				.toZMax()
 				.difference([	nutsert.toZMax().movex( gridUnits*0.5),
