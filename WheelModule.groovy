@@ -58,7 +58,7 @@ def tire = CSG.unionAll(
 		.roty(90)
 def bearing =Vitamins.get("ballBearing","695zz").hull().makeKeepaway(printerOffset.getMM()).toZMin()
 LengthParameter boltlen 			= new LengthParameter("Bolt Length",0.675,[1.2,0])
-boltlen.setMM(45)
+boltlen.setMM(50-1.388*2)
 String size ="M5"
 HashMap<String, Object>  boltData = Vitamins.getConfiguration( "capScrew",size)
 def bolt =new Cylinder(boltData.outerDiameter/2+printerOffset.getMM()/2,boltlen.getMM()).toCSG()
