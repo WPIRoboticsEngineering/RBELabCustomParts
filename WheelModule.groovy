@@ -99,8 +99,8 @@ tire=tire .movez(  bevelGears.get(3))
 bearing=bearing
 		.roty(90)
 		.movez(  bevelGears.get(3))
-		.movex( gearBThickness-bevelGears.get(2))
-bearing2 = bearing.movex(bearing.getTotalX() -gearBThickness-wheelSectionThickness)
+		.movex( gearBThickness-bevelGears.get(2)+washerThick)
+bearing2 = bearing.movex(bearing.getTotalX() -gearBThickness-wheelSectionThickness-washerThick)
 CSG outputGear = bevelGears.get(0)
 CSG adrive = bevelGears.get(1)
 
@@ -139,7 +139,7 @@ def rSideGrid = nutGrid
 			.movez(  bevelGears.get(3))
 			.rotz(180)
 			.movex(motorPlate.getMinX() )			
-def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()
+def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()//-washerThick
 def baseSupportRad = 17
 def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		boltData.outerDiameter/2+1, // Radius at the top
@@ -240,7 +240,7 @@ def driveGear = outputGear.difference([shaftBlank,motorBlank])
 def bracketm=bracket.mirrorx().movex(wheelbase+wheelCenterlineX*2)
 // Attach production scripts
 
-driveSection= [driveGear,bracket, bracketm,wheelAsmb,tire,motorBlank].collect{
+driveSection= [driveGear,bracket, bracketm,wheelAsmb,tire,motorBlank,bearing,bearing2].collect{
 	it.move(-wheelCenterlineX,tire.getMaxY(),- bevelGears.get(3))
 	.rotx(-90)
 	}
@@ -379,6 +379,7 @@ motorBlank.setManufacturing({ toMfg ->
 })
 println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
+println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
 parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank]
 return parts
 println "Making a single STL assembly..."
