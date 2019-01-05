@@ -1,7 +1,8 @@
 //Your code here
 int depth=1
 double gridUnits = 25
-def wheelbase=gridUnits*3
+def wheelbaseIndex = 5
+def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
 def mm(def inches){
@@ -257,10 +258,10 @@ def standoffPart =CSG.unionAll([ 	new Cylinder(gridUnits/2,standoffHeight).toCSG
 							
 				])
 				.movez(BottomOfPlate)
-				.movex( gridUnits*1.5)
+				.movex( gridUnits*wheelbaseIndex/2)
 				.movey(gridUnits*5)
 def movedCastor =cast.toZMin()
-				.movex( gridUnits*1.5)
+				.movex( gridUnits*wheelbaseIndex/2)
 				.movey(gridUnits*5)
 standoffPart=	standoffPart.difference(	movedCastor)	
 
@@ -273,15 +274,15 @@ def netmoverV= new Cylinder(3/2,standoffHeight).toCSG()
 			.toZMin()
 			.movez(BottomOfPlate-10)
 for(int i=0;i<6;i++)
-	for(int j=0;j<4;j++){
+	for(int j=0;j<(wheelbaseIndex+1);j++){
 		nutsertGridPlate.add(netmoverP.movey(gridUnits*i)
 				   .movex(gridUnits*j))
 }
 
 for(int i=0;i<6;i++)
 	for(int j=0;j<2;j++){
-		nutsertGridPlate.add(netmoverV.movex(mm(0.5)*i+5)
-				   .movey(mm(0.5)*j*7+gridUnits+5))
+		nutsertGridPlate.add(netmoverV.movex(mm(0.5)*i+gridUnits/2)
+				   .movey(mm(0.5)*j*7+gridUnits-gridUnits/2))
 }
 standoffPart=	standoffPart.difference(	movedCastor)	
 			.difference(	nutsertGridPlate)	
@@ -296,7 +297,7 @@ def wheelAsmbl = wheelAsmb.mirrorx().movex(wheelbase)
 def tirel = tire.mirrorx().movex(wheelbase)
 def motorBlankl=motorBlank.mirrorx().movex(wheelbase)
 
-def plate =  new Cube(gridUnits*4,gridUnits*6,mm(1.0/4.0)).toCSG()
+def plate =  new Cube(gridUnits*(wheelbaseIndex+1),gridUnits*6,mm(1.0/4.0)).toCSG()
 				.toZMin()
 				.toXMin()
 				.toYMin()
