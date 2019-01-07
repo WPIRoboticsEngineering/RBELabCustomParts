@@ -1,7 +1,7 @@
 //Your code here
 int depth=1
 double gridUnits = 25
-def wheelbaseIndex = 10
+def wheelbaseIndex = 9
 def wheelbaseIndexY = 13
 def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
