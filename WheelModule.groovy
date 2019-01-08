@@ -360,13 +360,13 @@ plate.addExportFormat("svg")// make an svg of the object
 plate.setName("plate")
 	.setManufacturing({ toMfg ->
 	return toMfg
-			.toXMin()
-			.toYMin()
 			.toZMin()
 })
 movedCastor.setManufacturing({ toMfg ->
 	return null
 })
+tire.setName("tire")
+tirel.setName("tirel")
 tire.setManufacturing({ toMfg ->
 	return null
 })
@@ -383,7 +383,34 @@ println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
 parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank]
-return parts
+def toProject =[bracket,wheelAsmb,tire,plate]
+def toProjectF =[bracket,bracketm,wheelAsmb,wheelAsmbl,tire,plate,tirel]
+def toProjectb =[plate,movedCastor,standoffPart]
+projection = toProject.collect{
+	def back = it.roty(90)
+				.movex(-gridUnits*3)
+				.setName(it.getName()+"-projection")
+	back.addExportFormat("svg")
+	return back
+}
+projectionf = toProjectF.collect{
+	def back = it.rotx(-90)
+				.movey(-gridUnits*3)
+				.setName(it.getName()+"-projection-f")
+	back.addExportFormat("svg")
+	return back
+}
+projectionb = toProjectb.collect{
+	def back = it
+	.movey(-gridUnits*(wheelbaseIndexY-1))
+	.rotx(90)
+	.movey(gridUnits*(wheelbaseIndexY-1))
+				.movey(gridUnits*3)
+				.setName(it.getName()+"-projection-b")
+	back.addExportFormat("svg")
+	return back
+}
+return [parts,projection,projectionf]
 println "Making a single STL assembly..."
 def singleSTL = CSG.unionAll(parts)
 singleSTL.setName("fullAssembly_DO_NOT_PRINT")
