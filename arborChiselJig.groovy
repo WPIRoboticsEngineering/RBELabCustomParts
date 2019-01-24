@@ -1,10 +1,18 @@
-def bracket = new Cube(40,40,20).toCSG()
+def bracket = new Cube(40,40,30).toCSG()
 			.toZMin()
 
 bracket = bracket.difference(new Cube(25,25,bracket.getTotalZ()-17).toCSG()
 			.toZMax()
 			.movez(bracket.getMaxZ()))
-def slot=new Cube(0.63,9.5,bracket.getTotalZ()).toCSG()
+def slot=new Cube(0.63,10.5,bracket.getTotalZ()).toCSG()
 		.toZMin()
-bracket=bracket.difference(slot)
+
+def setscrew = new Cylinder(5.6/2,40).toCSG()
+			.movez(-bracket.getTotalX()/2)
+			.roty(90)
+			.toZMin()
+			.movez(18)
+			
+
+bracket=bracket.difference([slot,setscrew,setscrew.movez(-10)])
 return bracket
