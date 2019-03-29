@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="602mm"
+   height="912mm"
+   viewBox="0 0 602 912"
+   version="1.1"
+   id="svg8"
+   inkscape:version="0.92.4 (5da689c313, 2019-01-14)"
+   sodipodi:docname="2002 Unit Test.svg">
+  <defs
+     id="defs2" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="0.24748737"
+     inkscape:cx="36.96131"
+     inkscape:cy="1918.0817"
+     inkscape:document-units="mm"
+     inkscape:current-layer="layer1"
+     showgrid="false"
+     inkscape:window-width="1920"
+     inkscape:window-height="1001"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     showguides="false" />
+  <metadata
+     id="metadata5">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+        <dc:title />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Layer 1"
+     inkscape:groupmode="layer"
+     id="layer1"
+     transform="translate(60,515)">
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="279.32443"
+       y="293.97617"
+       id="text71"><tspan
+         sodipodi:role="line"
+         id="tspan69"
+         x="279.32443"
+         y="303.63165"
+         style="stroke-width:0.26458332"></tspan></text>
+    <circle
+       id="path10"
+       cx="5"
+       cy="292"
+       style="stroke-width:0.26458332"
+       r="5" />
+    <circle
+       id="path10-1"
+       cx="230"
+       cy="292"
+       style="stroke-width:0.26458332"
+       r="5" />
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="13.966472"
+       y="296.83981"
+       id="text44"><tspan
+         sodipodi:role="line"
+         id="tspan42"
+         x="13.966472"
+         y="296.83981"
+         style="stroke-width:0.26458332">Motor 1 Position 1</tspan><tspan
+         sodipodi:role="line"
+         x="13.966472"
+         y="310.06897"
+         style="stroke-width:0.26458332"
+         id="tspan46" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="238.96648"
+       y="296.83981"
+       id="text44-9"><tspan
+         sodipodi:role="line"
+         id="tspan42-2"
+         x="238.96648"
+         y="296.83981"
+         style="stroke-width:0.26458332">Motor 2 Position 1</tspan><tspan
+         sodipodi:role="line"
+         x="238.96648"
+         y="310.06897"
+         style="stroke-width:0.26458332"
+         id="tspan46-4" /></text>
+    <g
+       id="g77">
+      <circle
+         r="5"
+         style="stroke-width:0.26458332"
+         cy="-308"
+         cx="5"
+         id="path10-15" />
+      <circle
+         r="5"
+         style="stroke-width:0.26458332"
+         cy="-308"
+         cx="230"
+         id="path10-1-4" />
+    </g>
+    <circle
+       id="path10-15-5"
+       cx="-117.5"
+       cy="195.50002"
+       style="stroke-width:0.26458332"
+       r="5"
+       transform="scale(-1)" />
+    <circle
+       id="path10-1-4-5"
+       cx="-117.5"
+       cy="420.5"
+       style="stroke-width:0.26458332"
+       r="5"
+       transform="scale(-1)" />
+    <g
+       id="g4850"
+       transform="translate(-50)">
+      <circle
+         transform="scale(-1)"
+         r="5"
+         style="stroke-width:0.26458332"
+         cy="195.5"
+         cx="-317.5"
+         id="path10-15-5-8" />
+      <circle
+         transform="scale(-1)"
+         r="5"
+         style="stroke-width:0.26458332"
+         cy="420.5"
+         cx="-317.5"
+         id="path10-1-4-5-3" />
+    </g>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="13.966472"
+       y="-303.16019"
+       id="text44-2"><tspan
+         sodipodi:role="line"
+         id="tspan42-1"
+         x="13.966472"
+         y="-303.16019"
+         style="stroke-width:0.26458332">Motor 1 Position 2</tspan><tspan
+         sodipodi:role="line"
+         x="13.966472"
+         y="-289.93103"
+         style="stroke-width:0.26458332"
+         id="tspan46-3" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="238.96648"
+       y="-303.16019"
+       id="text44-2-4"><tspan
+         sodipodi:role="line"
+         id="tspan42-1-6"
+         x="238.96648"
+         y="-303.16019"
+         style="stroke-width:0.26458332">Motor 2 Position 2</tspan><tspan
+         sodipodi:role="line"
+         x="238.96648"
+         y="-289.93103"
+         style="stroke-width:0.26458332"
+         id="tspan46-3-1" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="125.96647"
+       y="-415.16019"
+       id="text44-2-2"><tspan
+         sodipodi:role="line"
+         id="tspan42-1-4"
+         x="125.96647"
+         y="-415.16019"
+         style="stroke-width:0.26458332">Motor 1 Position 3</tspan><tspan
+         sodipodi:role="line"
+         x="125.96647"
+         y="-401.93103"
+         style="stroke-width:0.26458332"
+         id="tspan46-3-3" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="125.96647"
+       y="-190.1602"
+       id="text44-2-2-0"><tspan
+         sodipodi:role="line"
+         id="tspan42-1-4-0"
+         x="125.96647"
+         y="-190.1602"
+         style="stroke-width:0.26458332">Motor 2 Position 3</tspan><tspan
+         sodipodi:role="line"
+         x="125.96647"
+         y="-176.93103"
+         style="stroke-width:0.26458332"
+         id="tspan46-3-3-6" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="276.46646"
+       y="-415.66019"
+       id="text44-2-2-7"><tspan
+         sodipodi:role="line"
+         id="tspan42-1-4-4"
+         x="276.46646"
+         y="-415.66019"
+         style="stroke-width:0.26458332">Motor 1 Position 4</tspan><tspan
+         sodipodi:role="line"
+         x="276.46646"
+         y="-402.43103"
+         style="stroke-width:0.26458332"
+         id="tspan4852" /><tspan
+         sodipodi:role="line"
+         x="276.46646"
+         y="-389.20184"
+         style="stroke-width:0.26458332"
+         id="tspan46-3-3-9" /></text>
+    <text
+       xml:space="preserve"
+       style="font-style:normal;font-weight:normal;font-size:10.58333302px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.26458332"
+       x="276.46646"
+       y="-190.6602"
+       id="text44-2-2-0-9"><tspan
+         sodipodi:role="line"
+         id="tspan42-1-4-0-0"
+         x="276.46646"
+         y="-190.6602"
+         style="stroke-width:0.26458332">Motor 2 Position 4</tspan><tspan
+         sodipodi:role="line"
+         x="276.46646"
+         y="-177.43103"
+         style="stroke-width:0.26458332"
+         id="tspan46-3-3-6-3" /></text>
+    <rect
+       id="rect235"
+       width="600"
+       height="910"
+       x="-59"
+       y="-514"
+       style="fill:none;stroke:#ff0000;stroke-width:2;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1" />
+  </g>
+</svg>
