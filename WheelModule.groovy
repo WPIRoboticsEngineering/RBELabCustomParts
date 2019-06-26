@@ -260,10 +260,10 @@ def standoffPart =CSG.unionAll([ 	new Cylinder(gridUnits/2,standoffHeight).toCSG
 				])
 				.movez(BottomOfPlate)
 				.movex( gridUnits*wheelbaseIndex/2)
-				.movey(gridUnits*(wheelbaseIndexY-1))
+				.movey(gridUnits*(Math.round((wheelbaseIndexY/2.0))))
 def movedCastor =cast.toZMin()
 				.movex( gridUnits*wheelbaseIndex/2)
-				.movey(gridUnits*(wheelbaseIndexY-1))
+				.movey(gridUnits*(Math.round((wheelbaseIndexY/2.0))))
 standoffPart=	standoffPart.difference(	movedCastor)	
 
 
@@ -274,10 +274,10 @@ def netmoverP= new Cylinder(5.0/2,standoffHeight/2).toCSG()
 def netmoverV= new Cylinder(3/2,standoffHeight).toCSG()
 			.toZMin()
 			.movez(BottomOfPlate-10)
-for(int i=0;i<wheelbaseIndexY;i++)
-	for(int j=0;j<(wheelbaseIndex+1);j++){
+for(int i=0;i<wheelbaseIndexY+3;i++)
+	for(int j=0;j<(wheelbaseIndex+3);j++){
 		nutsertGridPlate.add(netmoverP.movey(gridUnits*i)
-				   .movex(gridUnits*j))
+				   .movex(gridUnits*j-gridUnits))
 }
 
 for(int i=0;i<6;i++)
@@ -298,16 +298,17 @@ def wheelAsmbl = wheelAsmb.mirrorx().movex(wheelbase)
 def tirel = tire.mirrorx().movex(wheelbase)
 def motorBlankl=motorBlank.mirrorx().movex(wheelbase)
 
-CSG plateRound =new Cylinder((gridUnits*(wheelbaseIndex+2))/2,mm(1.0/4.0)).toCSG() 
+CSG plateRound =new Cylinder((gridUnits*(wheelbaseIndex+4))/2,mm(1.0/4.0)).toCSG() 
 				.toZMin()
 				.toXMin()
-				.move(-gridUnits,-gridUnits,BottomOfPlate)
-def plateCubic = new Cube(gridUnits*(wheelbaseIndex+1),gridUnits*wheelbaseIndexY,mm(1.0/4.0)).toCSG()
+				.move(-gridUnits*2,0,BottomOfPlate)
+def plateCubic = new Cube(gridUnits*(wheelbaseIndex+4),gridUnits*(wheelbaseIndexY+2),mm(1.0/4.0)).toCSG()
 				.toZMin()
 				.toXMin()
 				.toYMin()
-				.move(-gridUnits/2,-gridUnits/2,BottomOfPlate)
-def plate =  plateRound.intersect(plateCubic)
+				.move(-gridUnits*2,-gridUnits,BottomOfPlate)
+def plate =  plateRound
+				.intersect(plateCubic)
 				.difference(nutsertGridPlate)
 
 wheelAsmb.setName("wheel")
@@ -387,7 +388,9 @@ motorBlank.setManufacturing({ toMfg ->
 println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
-parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank]
+parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank,
+plateCubic
+]
 return parts
 
 def toProject =[bracket,wheelAsmb,tire,plate]
