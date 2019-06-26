@@ -1,8 +1,9 @@
-//Your code here
+println "Loading 200x robot"
 int depth=1
 double gridUnits = 25
 def wheelbaseIndex = 9
 def wheelbaseIndexY = 9
+def rideHeight = 75
 def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
@@ -52,6 +53,7 @@ motorBlank=motorBlank.movez(-motorToMountPlane)
 double tireID = mm(1.0+(5.0/8.0))
 double tireOD = mm(2.0)
 double width = mm(3.0/16.0)
+double axilToRideHeight = rideHeight-(tireOD/2)
 double sweepCenter = (double)(tireOD+tireID)/4.0
 def tire = CSG.unionAll(
 		Extrude.revolve(new Cylinder(width/2-printerOffset.getMM()/2,1.0).toCSG().roty(90),
@@ -134,7 +136,9 @@ def axelBolt = bolt
 			.movez(  bevelGears.get(3))
 			.movex(motorBlank.getCenterX() )
 
-def motorY = sweepCenter+width+nursertHeight +Math.abs(motorBlank.getMinY())
+def motorYold = sweepCenter+width+nursertHeight +Math.abs(motorBlank.getMinY())
+def motorY = axilToRideHeight
+println "Motor height was "+motorYold+" and is "+motorY
 def motorPlate = new Cube(boltlen.getMM(),motorY,motorToMountPlane).toCSG()
 				.movex(motorBlank.getCenterX() )
 				.toYMin()
@@ -259,7 +263,7 @@ driveSection= [driveGear,bracket, bracketm,wheelAsmb,tire,motorBlank,bearing,bea
 	it.move(-wheelCenterlineX,tire.getMaxY(),- bevelGears.get(3))
 	.rotx(-90)
 	}
-return driveSection
+
 def cast = castor()
 double BottomOfPlate=driveSection[1].getMaxZ()
 double castorStandoff = cast.getMinZ()
