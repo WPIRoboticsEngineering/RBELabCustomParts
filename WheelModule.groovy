@@ -29,7 +29,7 @@ def castor(){
 }	
 double tabThick = 3
 double batteryShort = mm(2.64)
-double batteryLong  =mm(5.25)
+double batteryLong  =mm(5.27)
 double centerline = gridUnits*wheelbaseIndex/2 
 double leftX = centerline +gridUnits*1.5
 double rightX = centerline -gridUnits*1.5
