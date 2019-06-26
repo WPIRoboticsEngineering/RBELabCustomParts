@@ -2,7 +2,7 @@
 int depth=1
 double gridUnits = 25
 def wheelbaseIndex = 9
-def wheelbaseIndexY = 13
+def wheelbaseIndexY = 9
 def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
@@ -298,11 +298,16 @@ def wheelAsmbl = wheelAsmb.mirrorx().movex(wheelbase)
 def tirel = tire.mirrorx().movex(wheelbase)
 def motorBlankl=motorBlank.mirrorx().movex(wheelbase)
 
-def plate =  new Cube(gridUnits*(wheelbaseIndex+1),gridUnits*wheelbaseIndexY,mm(1.0/4.0)).toCSG()
+CSG plateRound =new Cylinder((gridUnits*(wheelbaseIndex+2))/2,mm(1.0/4.0)).toCSG() 
+				.toZMin()
+				.toXMin()
+				.move(-gridUnits,-gridUnits,BottomOfPlate)
+def plateCubic = new Cube(gridUnits*(wheelbaseIndex+1),gridUnits*wheelbaseIndexY,mm(1.0/4.0)).toCSG()
 				.toZMin()
 				.toXMin()
 				.toYMin()
 				.move(-gridUnits/2,-gridUnits/2,BottomOfPlate)
+def plate =  plateRound.intersect(plateCubic)
 				.difference(nutsertGridPlate)
 
 wheelAsmb.setName("wheel")
@@ -383,6 +388,8 @@ println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
 parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank]
+return parts
+
 def toProject =[bracket,wheelAsmb,tire,plate]
 def toProjectF =[bracket,bracketm,wheelAsmb,wheelAsmbl,tire,plate,tirel]
 def toProjectb =[plate,movedCastor,standoffPart]
