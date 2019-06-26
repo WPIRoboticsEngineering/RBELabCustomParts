@@ -104,6 +104,9 @@ bearing=bearing
 		.movex( gearBThickness-bevelGears.get(2)+washerThick)
 bearing2 = bearing.movex(bearing.getTotalX() -gearBThickness-wheelSectionThickness-washerThick)
 CSG outputGear = bevelGears.get(0)
+CSG supportOutputGear = new Cylinder(outputGear.getTotalX()/2,Math.abs(motorToMountPlane)).toCSG()
+					.toZMax()
+outputGear=outputGear.union(	supportOutputGear)
 CSG adrive = bevelGears.get(1)
 
 def nutsertGrid= []
