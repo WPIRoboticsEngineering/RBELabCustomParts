@@ -42,8 +42,10 @@ StringParameter shaftSize = new StringParameter("Shaft Size","WPI-gb37y3530-50en
 
 def motorBlank= Vitamins.get(motors.getStrValue(),motorSize.getStrValue()).rotz(180)
 def shaftBlank= Vitamins.get(shafts.getStrValue(),shaftSize.getStrValue())
+HashMap<String, Object>  motorData = Vitamins.getConfiguration( motors.getStrValue(),motorSize.getStrValue())
 
 double motorToMountPlane = motorBlank.getMaxZ()
+double motorToMountPlaneMinusShoulder  = motorToMountPlane-motorData.shaftCollarHeight
 double shaftLength=shaftBlank.getTotalZ()
 
 motorBlank=motorBlank.movez(-motorToMountPlane)
@@ -104,7 +106,7 @@ bearing=bearing
 		.movex( gearBThickness-bevelGears.get(2)+washerThick)
 bearing2 = bearing.movex(bearing.getTotalX() -gearBThickness-wheelSectionThickness-washerThick)
 CSG outputGear = bevelGears.get(0)
-CSG supportOutputGear = new Cylinder(outputGear.getTotalX()/2,Math.abs(motorToMountPlane)).toCSG()
+CSG supportOutputGear = new Cylinder(outputGear.getTotalX()/2-0.1,Math.abs(motorToMountPlaneMinusShoulder)).toCSG()
 					.toZMax()
 outputGear=outputGear.union(	supportOutputGear)
 CSG adrive = bevelGears.get(1)
@@ -391,8 +393,7 @@ motorBlank.setManufacturing({ toMfg ->
 println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
-parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank,
-plateCubic
+parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank
 ]
 return parts
 
