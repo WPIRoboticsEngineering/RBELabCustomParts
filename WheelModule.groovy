@@ -7,6 +7,9 @@ def rideHeight = 75
 def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
+double nursertHeight = 9.5
+double nutsertRad = 6.4/2+printerOffset.getMM()/2
+def nutsert=new Cylinder(nutsertRad,nursertHeight ).toCSG() 
 def mm(def inches){
 	return inches*25.4
 }
@@ -24,7 +27,65 @@ def castor(){
 		])
 		.rotx(180)
 }	
+double tabThick = 3
+double batteryShort = mm(2.64)
+double batteryLong  =mm(5.25)
+double centerline = gridUnits*wheelbaseIndex/2 
+double leftX = centerline +gridUnits*1.5
+double rightX = centerline -gridUnits*1.5
+def leftNutsert = nutsert.toZMax()
+			.movez(rideHeight)
+			.movex( leftX)
+def rightNutsert = nutsert.toZMax()
+			.movez(rideHeight)
+			.movex(rightX)
+def rightNutsertSet= rightNutsert.movey(gridUnits)
+for(double i=gridUnits*2;i<batteryLong;i+=gridUnits){
+	//println "Right ="+i
+	rightNutsertSet=rightNutsertSet.union(rightNutsert.movey(i))
+}
+def leftSet= leftNutsert.movey(gridUnits)
+for(double i=gridUnits;i<batteryLong;i+=gridUnits){
+	//println "Left ="+i
+	leftSet=leftSet.union(leftNutsert.movey(i))
+}
 
+def batteryHoles= leftSet.union(rightNutsertSet)
+def batteryBox = new Cube(batteryHoles.getTotalX()+tabThick*2,batteryLong+tabThick*2,batteryShort+tabThick).toCSG()
+			.toYMin()
+			.toZMax()
+			.movez(rideHeight)
+			.movex( centerline)
+			.movey(-tabThick)
+def battery = new Cube(batteryShort,batteryLong,batteryShort).toCSG()
+			.toYMin()
+			.toZMax()
+			.movez(rideHeight)
+			.movex( centerline)
+def batteryBackHole = new Cube(batteryShort-tabThick*2,batteryLong+tabThick*2,batteryShort-tabThick).toCSG()
+			.toYMin()
+			.toZMax()
+			.movez(rideHeight)
+			.movex( centerline)		
+def terminals = new Cube(batteryShort-15,30,25).toCSG()
+			.toYMin()
+			.toZMin()
+			.movez(rideHeight)
+			.movex( centerline)			
+	//		.union([		leftNutsert,rightNutsert])
+battery=battery.union(terminals)
+batteryBox=batteryBox.difference([battery,
+battery.movez(tabThick)
+	  .movey(-tabThick),
+	  batteryBackHole,
+batteryHoles])
+batteryBox.setName("batteryBox")
+batteryBox.setManufacturing({ toMfg ->
+	return toMfg
+			.rotx(90)
+			.toZMin()
+})
+//return [	battery,batteryBox]
 double washerThick = 1
 def motorOptions = []
 def shaftOptions = []
@@ -68,9 +129,8 @@ boltlen.setMM(50-1.388*2)
 String size ="M5"
 HashMap<String, Object>  boltData = Vitamins.getConfiguration( "capScrew",size)
 def bolt =new Cylinder(boltData.outerDiameter/2+printerOffset.getMM()/2,boltlen.getMM()).toCSG()
-double nursertHeight = 9.5
-double nutsertRad = 6.4/2+printerOffset.getMM()/2
-def nutsert=new Cylinder(nutsertRad,nursertHeight ).toCSG() 
+
+
 
 double pitch = 3
 int atheeth =16
@@ -87,8 +147,8 @@ List<Object> bevelGears = (List<Object>)ScriptingEngine
 	           90
             ]
             )
-println "Bevel gear radius A " + bevelGears.get(2)
-println "Bevel gear radius B " + bevelGears.get(3)
+println "\tBevel gear radius A " + bevelGears.get(2)
+println "\tBevel gear radius B " + bevelGears.get(3)
 def gearBThickness = bevelGears.get(6)
 def wheelSectionThickness = width*1.5
 def wheelCenterlineX = -wheelSectionThickness/2-bevelGears.get(2)
@@ -137,12 +197,13 @@ def axelBolt = bolt
 			.movex(motorBlank.getCenterX() )
 
 def motorYold = sweepCenter+width+nursertHeight +Math.abs(motorBlank.getMinY())
-def motorY = axilToRideHeight
+def motorBracketYOffset = Math.abs(motorBlank.getMinY())
+def motorY = axilToRideHeight+motorBracketYOffset+0.25
 println "Motor height was "+motorYold+" and is "+motorY
 def motorPlate = new Cube(boltlen.getMM(),motorY,motorToMountPlane).toCSG()
 				.movex(motorBlank.getCenterX() )
 				.toYMin()
-				.movey(motorBlank.getMinY())
+				.movey(-motorBracketYOffset)
 				.toZMax()
 def axelMount = nutsert
 			.roty(90)
@@ -268,6 +329,7 @@ def cast = castor()
 double BottomOfPlate=driveSection[1].getMaxZ()
 double castorStandoff = cast.getMinZ()
 double standoffHeight = BottomOfPlate+castorStandoff
+double castorDistanceY =gridUnits*(Math.round((wheelbaseIndexY/2.0))+1)
 def standoffPart =CSG.unionAll([ 	new Cylinder(gridUnits/2,standoffHeight).toCSG().movex( gridUnits*0.5),
 							new Cylinder(gridUnits/2,standoffHeight).toCSG().movex( -gridUnits*0.5)
 				]).hull()
@@ -278,10 +340,10 @@ def standoffPart =CSG.unionAll([ 	new Cylinder(gridUnits/2,standoffHeight).toCSG
 				])
 				.movez(BottomOfPlate)
 				.movex( gridUnits*wheelbaseIndex/2)
-				.movey(gridUnits*(Math.round((wheelbaseIndexY/2.0))))
+				.movey(castorDistanceY)
 def movedCastor =cast.toZMin()
 				.movex( gridUnits*wheelbaseIndex/2)
-				.movey(gridUnits*(Math.round((wheelbaseIndexY/2.0))))
+				.movey(castorDistanceY)
 standoffPart=	standoffPart.difference(	movedCastor)	
 
 
@@ -328,6 +390,7 @@ def plateCubic = new Cube(gridUnits*(wheelbaseIndex+4),gridUnits*(wheelbaseIndex
 def plate =  plateRound
 				.intersect(plateCubic)
 				.difference(nutsertGridPlate)
+				.difference(battery)
 
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
@@ -403,10 +466,16 @@ motorBlankl.setManufacturing({ toMfg ->
 motorBlank.setManufacturing({ toMfg ->
 	return null
 })
+battery.setManufacturing({ toMfg ->
+	return null
+})
+
 println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
-parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,plate,tire,tirel,motorBlankl,motorBlank
+parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,
+plate,tire,tirel,motorBlankl,
+motorBlank,batteryBox
 ]
 return parts
 
