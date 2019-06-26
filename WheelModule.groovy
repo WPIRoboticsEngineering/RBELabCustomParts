@@ -94,10 +94,15 @@ def wheelCore = new Cylinder(sweepCenter,wheelSectionThickness).toCSG()
 			.roty(-90)
 			.movez(  bevelGears.get(3))
 			.movex( -wheelSectionThickness-bevelGears.get(2))
+def wheelWellCenter = new Cylinder(6,wheelSectionThickness+gearBThickness).toCSG()
+			.roty(-90)
+			.movez(  bevelGears.get(3))
+			.movex( -wheelSectionThickness-bevelGears.get(2)-washerThick)
 def wheelwell = new Cylinder(sweepCenter+width,wheelSectionThickness+gearBThickness).toCSG()
 			.roty(-90)
 			.movez(  bevelGears.get(3))
-			.movex( -wheelSectionThickness-bevelGears.get(2)-washerThick)			
+			.movex( -wheelSectionThickness-bevelGears.get(2)-washerThick)
+			//.difference(wheelWellCenter)			
 tire=tire .movez(  bevelGears.get(3))
 		.movex( wheelCenterlineX)
 bearing=bearing
@@ -147,6 +152,7 @@ def rSideGrid = nutGrid
 			.rotz(180)
 			.movex(motorPlate.getMinX() )			
 def leftHeight = motorPlate.getMaxX()-bevelGears.get(1).getMaxX()-printerOffset.getMM()//-washerThick
+def rightHeight = Math.abs(motorPlate.getMinX()-wheelCore.getMinX())
 def baseSupportRad = 17
 def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		boltData.outerDiameter/2+1, // Radius at the top
@@ -157,7 +163,8 @@ def leftCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		.toXMax()
                       		.movex(motorPlate.getMaxX())
                       		.movez(  bevelGears.get(3))
-def rightHeight = Math.abs(motorPlate.getMinX()-wheelwell.getMinX())-printerOffset.getMM()-washerThick
+
+println "Right cone height = "+rightHeight
 def rightCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		boltData.outerDiameter/2+1, // Radius at the top
                       		rightHeight, // Height
@@ -231,14 +238,15 @@ def gearHole =  new Cylinder(bevelGears.get(0).getMaxX()+1,motorToMountPlane).to
 				.toZMax()     
 
 // FInal assembly section				
-def bracket = CSG.unionAll([motorPlate,leftCone,rightCone,sideWallBarL,sideWallBarR,backPlate
-
-])  .difference([axelBolt,wheelwell,motorBlank,gearHole,
+def bracket = CSG.unionAll([motorPlate,leftCone,rightCone,sideWallBarL,
+sideWallBarR,
+backPlate
+]).difference([wheelMountHole,wheelwell,gearHole])
+.union(rightCone) 
+.difference([axelBolt,motorBlank,
 axelMount,
-wheelMountHole,
 lSideGrid,rSideGrid,wheelMountGrid
-])	
-
+])
 def wheelAsmb = CSG.unionAll([adrive,wheelCore
 ]).difference([axelBolt,tire,bearing,bearing2
 
@@ -251,6 +259,7 @@ driveSection= [driveGear,bracket, bracketm,wheelAsmb,tire,motorBlank,bearing,bea
 	it.move(-wheelCenterlineX,tire.getMaxY(),- bevelGears.get(3))
 	.rotx(-90)
 	}
+return driveSection
 def cast = castor()
 double BottomOfPlate=driveSection[1].getMaxZ()
 double castorStandoff = cast.getMinZ()
