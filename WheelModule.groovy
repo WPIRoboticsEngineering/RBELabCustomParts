@@ -1,10 +1,15 @@
 println "Loading 200x robot"
+def mm(def inches){
+	return inches*25.4
+}
 int depth=1
 double gridUnits = 25
 def wheelbaseIndex = 9
 def wheelbaseIndexY = 9
 def rideHeight = 75
 def plateThickness =mm(1.0/4.0)
+def plateLevel = rideHeight+plateThickness
+
 def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
@@ -12,13 +17,66 @@ String size ="M5"
 HashMap<String, Object>  boltData = Vitamins.getConfiguration( "capScrew",size)
 double nursertHeight = 9.5
 double nutsertRad = 6.4/2+printerOffset.getMM()/2
+def nutsert=new Cylinder(nutsertRad,nursertHeight ).toCSG() 
+
+double standOffRadius = nutsertRad*3
 double motorStandoffBoltLen = 45
 double electronicsBayStandoff = 45
 
-def nutsert=new Cylinder(nutsertRad,nursertHeight ).toCSG() 
-def mm(def inches){
-	return inches*25.4
-}
+double sensorWidth = mm(2.95)
+double sensorthickness = mm( 0.1)
+double sensorRideHeight=5-sensorthickness
+double sensorDepth = mm(0.5)
+double sensorOverlapBracket = 2
+double sensorOverhangBracket = sensorDepth/2
+
+def sensor = new Cube(sensorWidth,sensorDepth,sensorthickness).toCSG()
+			.toZMin()
+			.movez(sensorRideHeight*2)
+			.movex(gridUnits*4.5)
+			.movey(-gridUnits*2-sensorOverhangBracket-standOffRadius)
+			
+def sensorStandoffCore=new Cylinder(standOffRadius,rideHeight-sensorRideHeight+plateThickness ).toCSG() 
+def sensorStandOff = sensorStandoffCore.union(sensorStandoffCore.movex(gridUnits)).hull()
+				.difference([
+				nutsert.toZMax().movez(rideHeight+plateThickness),
+				nutsert.toZMax().movez(rideHeight+plateThickness).movex(gridUnits)
+				])
+def skidHole=new Cylinder(2,sensorRideHeight+sensorthickness ).toCSG() 			
+def skidCOre=new Cylinder(sensorOverhangBracket+2,sensorRideHeight+sensorthickness ).toCSG() 
+double skidCorner = sensorWidth/2				
+def skidHolder = skidCOre.movex(-skidCorner).union(skidCOre.movex(skidCorner)).hull()
+				.movex(gridUnits*0.5)
+skidHolder=skidHolder.union(skidHolder.movez(sensorRideHeight*2)).hull()
+
+def sideBracket= skidCOre
+						.toYMin()
+						.movey(-(standOffRadius+sensorOverhangBracket))
+						.union(skidCOre)
+						.hull()
+def leftSideSensorBracket =sideBracket		
+						.movex(skidCorner+gridUnits*0.5)
+def rightSideSensorBracket =sideBracket		
+						.movex(-skidCorner+gridUnits*0.5)
+def skidHoleLeft = skidHole
+				.toXMax()
+				.movex(-skidCorner+gridUnits*0.5)
+				.movey(-(standOffRadius+sensorOverhangBracket/3))
+def skidHoleRight = skidHole
+				.toXMin()
+				.movex(skidCorner+gridUnits*0.5)
+				.movey(-(standOffRadius+sensorOverhangBracket/3))				
+sensorStandOff=sensorStandOff
+				.union(leftSideSensorBracket)
+				.union(rightSideSensorBracket)
+				.union(skidHolder)
+				.difference(skidHoleLeft)
+				.difference(skidHoleRight)
+				.movex(gridUnits*4)
+				.movey(-gridUnits*2)
+				.movez(sensorRideHeight)
+				.difference(sensor)
+
 def castor(){
 	new Sphere(15.8/2)// Spheres radius
 				.toCSG()
@@ -91,7 +149,7 @@ batteryBox.setManufacturing({ toMfg ->
 			.rotx(90)
 			.toZMin()
 })
-CSG standoffCore = new Cylinder(nutsertRad*3,electronicsBayStandoff).toCSG()
+CSG standoffCore = new Cylinder(standOffRadius,electronicsBayStandoff).toCSG()
 CSG boltHole = new Cylinder(2.5+0.25,electronicsBayStandoff).toCSG()
 double boltDepth = electronicsBayStandoff-(motorStandoffBoltLen -plateThickness-nursertHeight )
 CSG boltHeadHole = new Cylinder(boltData.headDiameter/2.0+0.25,boltDepth).toCSG()
@@ -122,7 +180,7 @@ double hingePoint = electronicsBayStandoff/2
 double spacing = 0.5
 double hingePartsThickness = (gridUnits-(spacing*2))/3
 def hingeBolt = boltHole.roty(-90).movez(hingePoint)
-CSG hingeCore = new Cylinder(nutsertRad*3,hingePartsThickness).toCSG()
+CSG hingeCore = new Cylinder(standOffRadius,hingePartsThickness).toCSG()
 def hingeBase =hingeCore.movex(gridUnits).union(hingeCore).hull()
 
 CSG hingemount = new Cube(hingePartsThickness,nutsertRad*6,hingePartsThickness).toCSG()
@@ -156,7 +214,23 @@ def rightHinge = hingeParts.collect{
 	it.move(gridUnits*7,gridUnits*5,rideHeight+ plateThickness)
 }
 def cableGuide = upper.move(gridUnits*4,gridUnits*5,rideHeight+ plateThickness)
-//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide]
+
+CSG sensorPlateCore = new Cylinder(standOffRadius,plateThickness).toCSG()
+
+def sensorPlate = sensorPlateCore.union([
+	sensorPlateCore.move(gridUnits,-gridUnits,0),
+	sensorPlateCore.move(0,-gridUnits,0),
+	sensorPlateCore.move(gridUnits,0,0)
+	]).hull()
+	.difference([
+	boltHole,
+	boltHole.move(gridUnits,-gridUnits,0),
+	boltHole.move(0,-gridUnits,0),
+	boltHole.move(gridUnits,0,0)
+	])
+	.move(gridUnits*4,-gridUnits,plateLevel)
+
+return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff]
 
 
 
@@ -209,6 +283,7 @@ def bolt =new Cylinder(boltData.outerDiameter/2+printerOffset.getMM()/2,boltlen.
 
 double pitch = 3
 int atheeth =16
+println "Making gears..."
 // call a script from another library
 List<Object> bevelGears = (List<Object>)ScriptingEngine
 					 .gitScriptRun(
@@ -432,23 +507,19 @@ def netmoverP= new Cylinder(5.0/2,standoffHeight/2).toCSG()
 def netmoverV= new Cylinder(3/2,standoffHeight).toCSG()
 			.toZMin()
 			.movez(BottomOfPlate-10)
-for(int i=0;i<wheelbaseIndexY+3;i++)
+for(int i=0;i<8;i++)
 	for(int j=0;j<(wheelbaseIndex+3);j++){
-		nutsertGridPlate.add(netmoverP.movey(gridUnits*i)
+		nutsertGridPlate.add(netmoverP.movey(gridUnits*i-gridUnits)
 				   .movex(gridUnits*j-gridUnits))
 }
 
-for(int i=0;i<6;i++)
-	for(int j=0;j<2;j++){
-		nutsertGridPlate.add(netmoverV.movex(mm(0.5)*i+gridUnits/2)
-				   .movey(mm(0.5)*j*7+gridUnits-gridUnits/2))
-}
+
 // 
 println "Cutting castor"
 standoffPart=	standoffPart.difference(	movedCastor)	
 			//.difference(	nutsertGridPlate)	
 wheelAsmb=driveSection[3]
-println "Cutting grid from drive section"
+println "Mirroring drive section"
 bracketm=driveSection[2]//.difference(nutsertGridPlate)
 bracket=driveSection[1]//.difference(nutsertGridPlate)
 driveGear=driveSection[0]
@@ -458,21 +529,22 @@ def driveGearl = driveGear.mirrorx().movex(wheelbase)
 def wheelAsmbl = wheelAsmb.mirrorx().movex(wheelbase)
 def tirel = tire.mirrorx().movex(wheelbase)
 def motorBlankl=motorBlank.mirrorx().movex(wheelbase)
-double plateRadius = ((gridUnits*(wheelbaseIndex+4))/2)+5
-println "Plate Diameter "+(plateRadius*2.0/25.4)
+double plateRadius = (13.0*25.4)/2
+
 CSG plateRound =new Cylinder(plateRadius,plateRadius,plateThickness,(int)60).toCSG() 
 				.toZMin()
 				.move(centerline,0,BottomOfPlate)
 def plateCubic = new Cube(plateRadius*2,gridUnits*(wheelbaseIndexY+2),plateThickness).toCSG()
 				.toZMin()
 				.toYMin()
-				.move(centerline,-gridUnits,BottomOfPlate)
+				.move(centerline,-gridUnits*1.5,BottomOfPlate)
 println "Cutting grid from plate, may take a while..."
 def plate =  plateRound
 				.intersect(plateCubic)
 				.difference(nutsertGridPlate)
 				.difference(battery)
 def plate2 = plate .movez(electronicsBayStandoff+plateThickness)
+println "Plate Dimentions "+(plateRadius*2.0/25.4)+"\" by "+(plate.getTotalY()/25.4)+"\""
 println "Making mfg scripts "
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
@@ -539,6 +611,13 @@ standoffRight.setName("standoffPartR")
 			.toYMin()
 			.toZMin()
 })
+sensorPlate.addExportFormat("svg")
+sensorPlate.setName("sensorPlate")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+			.movey(-gridUnits*2)
+})
 plate.addExportFormat("svg")// make an svg of the object
 plate.setName("plate")
 	.setManufacturing({ toMfg ->
@@ -596,6 +675,7 @@ rightHinge.get(1).setName("rHingeLower")
 	return toMfg
 			.toZMin()
 })
+
 println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
@@ -606,7 +686,8 @@ standoffLeft,
 standoffRight,
 plate2,
 leftHinge,rightHinge,
-cableGuide
+cableGuide,
+sensorPlate
 ]
 return parts
 
