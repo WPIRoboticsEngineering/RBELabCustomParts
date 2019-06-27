@@ -443,12 +443,14 @@ for(int i=0;i<6;i++)
 		nutsertGridPlate.add(netmoverV.movex(mm(0.5)*i+gridUnits/2)
 				   .movey(mm(0.5)*j*7+gridUnits-gridUnits/2))
 }
+// 
+println "Cutting castor"
 standoffPart=	standoffPart.difference(	movedCastor)	
-			.difference(	nutsertGridPlate)	
+			//.difference(	nutsertGridPlate)	
 wheelAsmb=driveSection[3]
 println "Cutting grid from drive section"
-bracketm=driveSection[2].difference(nutsertGridPlate)
-bracket=driveSection[1].difference(nutsertGridPlate)
+bracketm=driveSection[2]//.difference(nutsertGridPlate)
+bracket=driveSection[1]//.difference(nutsertGridPlate)
 driveGear=driveSection[0]
 tire = driveSection[4]
 motorBlank = driveSection[5]
@@ -465,6 +467,7 @@ def plateCubic = new Cube(plateRadius*2,gridUnits*(wheelbaseIndexY+2),plateThick
 				.toZMin()
 				.toYMin()
 				.move(centerline,-gridUnits,BottomOfPlate)
+println "Cutting grid from plate, may take a while..."
 def plate =  plateRound
 				.intersect(plateCubic)
 				.difference(nutsertGridPlate)
