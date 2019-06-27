@@ -4,11 +4,17 @@ double gridUnits = 25
 def wheelbaseIndex = 9
 def wheelbaseIndexY = 9
 def rideHeight = 75
+def plateThickness =mm(1.0/4.0)
 def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
+String size ="M5"
+HashMap<String, Object>  boltData = Vitamins.getConfiguration( "capScrew",size)
 double nursertHeight = 9.5
 double nutsertRad = 6.4/2+printerOffset.getMM()/2
+double motorStandoffBoltLen = 45
+double electronicsBayStandoff = 45
+
 def nutsert=new Cylinder(nutsertRad,nursertHeight ).toCSG() 
 def mm(def inches){
 	return inches*25.4
@@ -85,7 +91,77 @@ batteryBox.setManufacturing({ toMfg ->
 			.rotx(90)
 			.toZMin()
 })
-//return [	battery,batteryBox]
+CSG standoffCore = new Cylinder(nutsertRad*3,electronicsBayStandoff).toCSG()
+CSG boltHole = new Cylinder(2.5+0.25,electronicsBayStandoff).toCSG()
+double boltDepth = electronicsBayStandoff-(motorStandoffBoltLen -plateThickness-nursertHeight )
+CSG boltHeadHole = new Cylinder(boltData.headDiameter/2.0+0.25,boltDepth).toCSG()
+				.toZMax()
+				.movez(electronicsBayStandoff)
+
+def standoff = standoffCore.union(standoffCore.movex(gridUnits*3)).hull()
+				.difference([
+				nutsert,
+				nutsert.movex(gridUnits*3),
+				nutsert.toZMax().movez(electronicsBayStandoff),
+				nutsert.toZMax().movez(electronicsBayStandoff).movex(gridUnits*3),
+				boltHole.movex(gridUnits),
+				boltHole.movex(gridUnits*2),
+				boltHeadHole.movex(gridUnits),
+				boltHeadHole.movex(gridUnits*2),
+				])
+
+
+
+def standoffLeft = standoff
+				.movex(-gridUnits)
+				.movez(rideHeight+ plateThickness)
+def standoffRight = standoff
+				.movex(gridUnits*7)
+				.movez(rideHeight+ plateThickness)
+double hingePoint = electronicsBayStandoff/2
+double spacing = 0.5
+double hingePartsThickness = (gridUnits-(spacing*2))/3
+def hingeBolt = boltHole.roty(-90).movez(hingePoint)
+CSG hingeCore = new Cylinder(nutsertRad*3,hingePartsThickness).toCSG()
+def hingeBase =hingeCore.movex(gridUnits).union(hingeCore).hull()
+
+CSG hingemount = new Cube(hingePartsThickness,nutsertRad*6,hingePartsThickness).toCSG()
+				.toZMin()
+				.toXMin()
+CSG hingePillar = hingemount.union(hingeCore.roty(-90).movez(hingePoint)).hull()
+def hingePillar2=hingePillar.movex(hingePartsThickness+spacing)
+				.rotx(180)
+				.movez(hingePoint*2)
+def hingePillar3=hingePillar.movex((hingePartsThickness+spacing)*2)
+
+def lower = hingeBase.union([hingePillar,hingePillar3])
+			.difference([
+			nutsert,
+			nutsert.movex(gridUnits),
+			nutsert.roty(-90).movez(hingePoint),
+			hingeBolt
+			])
+def upper = hingeBase.toZMax().movez(electronicsBayStandoff).union([hingePillar2])
+			.difference([
+			nutsert.toZMax().movez(electronicsBayStandoff),
+			nutsert.toZMax().movez(electronicsBayStandoff).movex(gridUnits),
+			hingeBolt
+			])
+def hingeParts = [upper,lower]
+
+def leftHinge = hingeParts.collect{
+	it.move(gridUnits,gridUnits*5,rideHeight+ plateThickness)
+}
+def rightHinge = hingeParts.collect{
+	it.move(gridUnits*7,gridUnits*5,rideHeight+ plateThickness)
+}
+
+//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge]
+
+
+
+
+
 double washerThick = 1
 def motorOptions = []
 def shaftOptions = []
@@ -126,8 +202,7 @@ def tire = CSG.unionAll(
 def bearing =Vitamins.get("ballBearing","695zz").hull().makeKeepaway(printerOffset.getMM()).toZMin()
 LengthParameter boltlen 			= new LengthParameter("Bolt Length",0.675,[1.2,0])
 boltlen.setMM(50-1.388*2)
-String size ="M5"
-HashMap<String, Object>  boltData = Vitamins.getConfiguration( "capScrew",size)
+
 def bolt =new Cylinder(boltData.outerDiameter/2+printerOffset.getMM()/2,boltlen.getMM()).toCSG()
 
 
@@ -378,11 +453,11 @@ def wheelAsmbl = wheelAsmb.mirrorx().movex(wheelbase)
 def tirel = tire.mirrorx().movex(wheelbase)
 def motorBlankl=motorBlank.mirrorx().movex(wheelbase)
 
-CSG plateRound =new Cylinder((gridUnits*(wheelbaseIndex+4))/2,mm(1.0/4.0)).toCSG() 
+CSG plateRound =new Cylinder((gridUnits*(wheelbaseIndex+4))/2,plateThickness).toCSG() 
 				.toZMin()
 				.toXMin()
 				.move(-gridUnits*2,0,BottomOfPlate)
-def plateCubic = new Cube(gridUnits*(wheelbaseIndex+4),gridUnits*(wheelbaseIndexY+2),mm(1.0/4.0)).toCSG()
+def plateCubic = new Cube(gridUnits*(wheelbaseIndex+4),gridUnits*(wheelbaseIndexY+2),plateThickness).toCSG()
 				.toZMin()
 				.toXMin()
 				.toYMin()
@@ -391,6 +466,7 @@ def plate =  plateRound
 				.intersect(plateCubic)
 				.difference(nutsertGridPlate)
 				.difference(battery)
+def plate2 = plate .movez(electronicsBayStandoff+plateThickness)
 
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
@@ -443,6 +519,20 @@ standoffPart.setName("standoffPart")
 			.toYMin()
 			.toZMin()
 })
+standoffLeft.setName("standoffPartL")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
+standoffRight.setName("standoffPartR")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toXMin()
+			.toYMin()
+			.toZMin()
+})
 plate.addExportFormat("svg")// make an svg of the object
 plate.setName("plate")
 	.setManufacturing({ toMfg ->
@@ -469,13 +559,41 @@ motorBlank.setManufacturing({ toMfg ->
 battery.setManufacturing({ toMfg ->
 	return null
 })
-
+plate2.setManufacturing({ toMfg ->
+	return null
+})
+leftHinge.get(0).setName("lHingeUpper")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.rotx(180)
+			.toZMin()
+})
+rightHinge.get(0).setName("rHingeUpper")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.rotx(180)
+			.toZMin()
+})
+leftHinge.get(1).setName("lHingeLower")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+})
+rightHinge.get(1).setName("rHingeLower")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+})
 println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
 parts=  [driveGear,driveGearl,bracket, bracketm,wheelAsmb,wheelAsmbl, movedCastor,standoffPart,
 plate,tire,tirel,motorBlankl,
-motorBlank,batteryBox
+motorBlank,batteryBox,
+standoffLeft,
+standoffRight,
+plate2,
+leftHinge,rightHinge
 ]
 return parts
 
