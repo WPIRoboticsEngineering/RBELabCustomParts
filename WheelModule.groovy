@@ -155,8 +155,8 @@ def leftHinge = hingeParts.collect{
 def rightHinge = hingeParts.collect{
 	it.move(gridUnits*7,gridUnits*5,rideHeight+ plateThickness)
 }
-
-//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge]
+def cableGuide = upper.move(gridUnits*4,gridUnits*5,rideHeight+ plateThickness)
+//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide]
 
 
 
@@ -452,22 +452,21 @@ def driveGearl = driveGear.mirrorx().movex(wheelbase)
 def wheelAsmbl = wheelAsmb.mirrorx().movex(wheelbase)
 def tirel = tire.mirrorx().movex(wheelbase)
 def motorBlankl=motorBlank.mirrorx().movex(wheelbase)
-
-CSG plateRound =new Cylinder((gridUnits*(wheelbaseIndex+4))/2,plateThickness).toCSG() 
+double plateRadius = ((gridUnits*(wheelbaseIndex+4))/2)+5
+println "Plate Diameter "+(plateRadius*2.0/25.4)
+CSG plateRound =new Cylinder(plateRadius,plateRadius,plateThickness,(int)60).toCSG() 
 				.toZMin()
-				.toXMin()
-				.move(-gridUnits*2,0,BottomOfPlate)
-def plateCubic = new Cube(gridUnits*(wheelbaseIndex+4),gridUnits*(wheelbaseIndexY+2),plateThickness).toCSG()
+				.move(centerline,0,BottomOfPlate)
+def plateCubic = new Cube(plateRadius*2,gridUnits*(wheelbaseIndexY+2),plateThickness).toCSG()
 				.toZMin()
-				.toXMin()
 				.toYMin()
-				.move(-gridUnits*2,-gridUnits,BottomOfPlate)
+				.move(centerline,-gridUnits,BottomOfPlate)
 def plate =  plateRound
 				.intersect(plateCubic)
 				.difference(nutsertGridPlate)
 				.difference(battery)
 def plate2 = plate .movez(electronicsBayStandoff+plateThickness)
-
+println "Making mfg scripts "
 wheelAsmb.setName("wheel")
 	.setManufacturing({ toMfg ->
 	return toMfg
@@ -562,6 +561,12 @@ battery.setManufacturing({ toMfg ->
 plate2.setManufacturing({ toMfg ->
 	return null
 })
+cableGuide.setName("cableGuide")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.rotx(180)
+			.toZMin()
+})
 leftHinge.get(0).setName("lHingeUpper")
 	.setManufacturing({ toMfg ->
 	return toMfg
@@ -593,7 +598,8 @@ motorBlank,batteryBox,
 standoffLeft,
 standoffRight,
 plate2,
-leftHinge,rightHinge
+leftHinge,rightHinge,
+cableGuide
 ]
 return parts
 
