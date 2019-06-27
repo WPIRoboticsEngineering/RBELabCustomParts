@@ -376,7 +376,7 @@ def wheelMountGrid = nutGrid
 			.movex( wheelCenterlineX)		
 def gearHole =  new Cylinder(bevelGears.get(0).getMaxX()+1,motorToMountPlane).toCSG() 
 				.toZMax()     
-
+println "Making bracket assembly"
 // FInal assembly section				
 def bracket = CSG.unionAll([motorPlate,leftCone,rightCone,sideWallBarL,
 sideWallBarR,
@@ -387,19 +387,22 @@ backPlate
 axelMount,
 lSideGrid,rSideGrid,wheelMountGrid
 ])
+println "Making wheel assembly"
 def wheelAsmb = CSG.unionAll([adrive,wheelCore
 ]).difference([axelBolt,tire,bearing,bearing2
 
 ])
+println "Making gear cutouts"
 def driveGear = outputGear.difference([shaftBlank,motorBlank])
+println "Making left side bracket"
 def bracketm=bracket.mirrorx().movex(wheelbase+wheelCenterlineX*2)
 // Attach production scripts
-
+println "Alligning bracket to robot frame"
 driveSection= [driveGear,bracket, bracketm,wheelAsmb,tire,motorBlank,bearing,bearing2].collect{
 	it.move(-wheelCenterlineX,tire.getMaxY(),- bevelGears.get(3))
 	.rotx(-90)
 	}
-
+println "Making castor"
 def cast = castor()
 double BottomOfPlate=driveSection[1].getMaxZ()
 double castorStandoff = cast.getMinZ()
@@ -421,7 +424,7 @@ def movedCastor =cast.toZMin()
 				.movey(castorDistanceY)
 standoffPart=	standoffPart.difference(	movedCastor)	
 
-
+println "Making hole grid"
 def nutsertGridPlate= []
 def netmoverP= new Cylinder(5.0/2,standoffHeight/2).toCSG()
 			.toZMin()
@@ -443,6 +446,7 @@ for(int i=0;i<6;i++)
 standoffPart=	standoffPart.difference(	movedCastor)	
 			.difference(	nutsertGridPlate)	
 wheelAsmb=driveSection[3]
+println "Cutting grid from drive section"
 bracketm=driveSection[2].difference(nutsertGridPlate)
 bracket=driveSection[1].difference(nutsertGridPlate)
 driveGear=driveSection[0]
