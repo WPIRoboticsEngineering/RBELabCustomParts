@@ -230,7 +230,7 @@ def sensorPlate = sensorPlateCore.union([
 	])
 	.move(gridUnits*4,-gridUnits,plateLevel)
 
-return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff]
+//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff]
 
 
 
@@ -675,7 +675,11 @@ rightHinge.get(1).setName("rHingeLower")
 	return toMfg
 			.toZMin()
 })
-
+sensorStandOff.setName("sensorStandOff")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+})
 println "BottomOfPlate = "+BottomOfPlate
 println "Plate dimentions x="+plate.getTotalX()+" y="+plate.getTotalY()
 println "Weel center line to outer wall of bracket="+Math.abs(bracket.getMinX())
@@ -687,7 +691,8 @@ standoffRight,
 plate2,
 leftHinge,rightHinge,
 cableGuide,
-sensorPlate
+sensorPlate,
+sensorStandOff
 ]
 return parts
 
