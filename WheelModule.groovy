@@ -460,7 +460,9 @@ backPlate
 .union(rightCone) 
 .difference([axelBolt,motorBlank,
 axelMount,
-lSideGrid,rSideGrid,wheelMountGrid
+lSideGrid,
+//rSideGrid,
+wheelMountGrid
 ])
 println "Making wheel assembly"
 def wheelAsmb = CSG.unionAll([adrive,wheelCore
