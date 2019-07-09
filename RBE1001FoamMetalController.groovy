@@ -27,7 +27,7 @@ CSG thumbCylinder = new Cylinder(thumbRadius, // Radius at the bottom
                       		).toCSG()//convert to CSG to display                    			         ).toCSG()//convert to CSG to display
 
 CSG tractionWheelHole = new Cube(85,
-						   20,
+						   21,
 						   height)
 						   .toCSG()
 						   .toYMin()
@@ -43,7 +43,7 @@ CSG omniWheelHole = new Cube(86,
 						   .toZMin()
 						   
 CSG largeGearHole = new Cube(80,
-						   10,
+						   12,
 						   height)
 						   .toCSG()
 						   .toYMin()
@@ -51,7 +51,7 @@ CSG largeGearHole = new Cube(80,
 						   .toZMin()
 						   
 CSG largeSprocketHole = new Cube(85,
-						   5,
+						   6,
 						   height)
 						   .toCSG()
 						   .toYMin()
@@ -59,14 +59,14 @@ CSG largeSprocketHole = new Cube(85,
 						   .toZMin()
 						   
 CSG smallSprocketHole = new Cube(74,
-						   5,
+						   6,
 						   height)
 						   .toCSG()
 						   .toYMin()
 						   .toXMin()
 						   .toZMin()	
 						   
-CSG plateHole = new Cube(4.5,
+CSG plateHole = new Cube(6,
 						   318,
 						   height)
 						   .toCSG()
@@ -77,7 +77,8 @@ CSG battery = CSG.unionAll([new Cube(100,28,height).toCSG().toYMin().toXMax().to
 					   new Cube (161, 23, height).toCSG().toYMin().toXMax().toZMin()])
 
 CSG vexNet = CSG.unionAll([new Cube(50,20,height).toCSG().toYMin().toXMax().toZMin(), 
-					   new Cube (85, 12, height).toCSG().toYMin().toXMax().toZMin()])					   
+					  new Cube (85, 12, height).toCSG().toYMin().toXMax().toZMin(),
+					  new Cylinder(thumbRadius, thumbRadius, height, (int)30).toCSG().movex(-50).movey(20)])					   
 def addThumbHole(def part, def thumb){
 	CSG newCyl = thumb.movex(part.getMaxX()).movey((part.getMinY()+part.getMaxY())/2)
 	thumb = thumb.movex(part.getMinX()).movey((part.getMinY()+part.getMaxY())/2)
@@ -128,4 +129,5 @@ Board = Board.difference(cutout)
 cutout = battery.movex(cutout.getMaxX()).movey(cutout.getMaxY() + wallSize + 20)
 Board = Board.difference(cutout)
 
+Board.addExportFormat("svg")
 return Board
