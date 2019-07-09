@@ -34,7 +34,7 @@ CSG tractionWheelHole = new Cube(85,
 						   .toXMin()
 						   .toZMin()
 
-CSG omniWheelHole = new Cube(85,
+CSG omniWheelHole = new Cube(86,
 						   26,
 						   height)
 						   .toCSG()
@@ -64,8 +64,20 @@ CSG smallSprocketHole = new Cube(74,
 						   .toCSG()
 						   .toYMin()
 						   .toXMin()
-						   .toZMin()						   				   
+						   .toZMin()	
+						   
+CSG plateHole = new Cube(4.5,
+						   318,
+						   height)
+						   .toCSG()
+						   .toYMin()
+						   .toXMin()
+						   .toZMin()
+CSG battery = CSG.unionAll([new Cube(100,28,height).toCSG().toYMin().toXMax().toZMin(), 
+					   new Cube (161, 23, height).toCSG().toYMin().toXMax().toZMin()])
 
+CSG vexNet = CSG.unionAll([new Cube(50,20,height).toCSG().toYMin().toXMax().toZMin(), 
+					   new Cube (85, 12, height).toCSG().toYMin().toXMax().toZMin()])					   
 def addThumbHole(def part, def thumb){
 	CSG newCyl = thumb.movex(part.getMaxX()).movey((part.getMinY()+part.getMaxY())/2)
 	thumb = thumb.movex(part.getMinX()).movey((part.getMinY()+part.getMaxY())/2)
@@ -92,15 +104,28 @@ for(int i = 0; i<8; i++){
 	Board = Board.difference(cutout)
 }
 
+cutout = vexNet.movex(-1 * vexNet.getMinX() + wallSize).movey(cutout.getMaxY() + wallSize)
+Board = Board.difference(cutout)
+
 for(int i = 0; i<12; i++){
-	cutout = largeGearHole.movex(wallSize*3+omniWheelHole.getMaxX()).movey(wallSize + i*(wallSize+largeGearHole.getMaxY()))
+	cutout = largeGearHole.movex(wallSize*3+omniWheelHole.getMaxX())
+					  .movey(wallSize + i*(wallSize+largeGearHole.getMaxY()))
 	if(i>7){
-		cutout = largeSprocketHole.movex(wallSize*3+omniWheelHole.getMaxX()).movey(2*(wallSize + largeGearHole.getMaxY()) + i*(wallSize+largeSprocketHole.getMaxY()))
+		cutout = largeSprocketHole.movex(wallSize*3+omniWheelHole.getMaxX())
+							 .movey(2*(wallSize + largeGearHole.getMaxY()) + i*(wallSize+largeSprocketHole.getMaxY()))
 	}
 	if(i>9){
-		cutout = smallSprocketHole.movex(wallSize*3+omniWheelHole.getMaxX()).movey(2*(wallSize + largeGearHole.getMaxY()) + i*(wallSize+smallSprocketHole.getMaxY()))
+		cutout = smallSprocketHole.movex(wallSize*3+omniWheelHole.getMaxX())
+							 .movey(2*(wallSize + largeGearHole.getMaxY()) + i*(wallSize+smallSprocketHole.getMaxY()))
 	}
 	Board = Board.difference(cutout)	    
 }
+
+cutout = plateHole.movex(wallSize*4 + omniWheelHole.getMaxX() + largeSprocketHole.getMaxX()).movey(wallSize)
+Board = Board.difference(cutout)
+cutout = cutout.movex(plateHole.getMaxX() + wallSize)
+Board = Board.difference(cutout)
+cutout = battery.movex(cutout.getMaxX()).movey(cutout.getMaxY() + wallSize + 20)
+Board = Board.difference(cutout)
 
 return Board
