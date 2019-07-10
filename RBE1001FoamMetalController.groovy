@@ -95,6 +95,11 @@ CSG brain = new Cube(100, 138, height).toCSG().rotz(90).toYMin().toXMax().toZMin
 CSG twoByMetal = addThumbHole(CSG.unionAll([new Cube(445, 77, height).toCSG().toYMin().toXMax().toZMin(),
 						 new Cube(317, 15, height).toCSG().toYMax().toXMax().toZMin()]),
 						 thumbCylinder).toYMin().toXMax().toZMin()
+
+CSG threeByMetal = addThumbHole(new Cube(39, 445, height).toCSG().toYMin().toXMax().toZMin(), thumbCylinder).rotz(90).toYMin().toXMax().toZMin() 
+
+CSG longL = new Cube (445,2.5,height).toCSG().toYMin().toXMax().toZMin()
+
 def addThumbHole(def part, def thumb){
 	CSG newCyl = thumb.movey(part.getMaxY()).movex((part.getMinX()+part.getMaxX())/2)
 	thumb = thumb.movey(part.getMinY()).movex((part.getMinX()+part.getMaxX())/2)
@@ -155,11 +160,18 @@ File f = ScriptingEngine
 SVGLoad s = new SVGLoad(f.toURI())
 def controllerSVG = s.extrude(height,0.01).get(0)
 CSG controller = controllerSVG
-controller = controller.rotz(-180).toXMin().toYMin()
+controller = controller.rotz(-155).toXMin().toYMin()
 		   .movex(wallSize).movey(wallSize)
 boardLarge = boardLarge.difference(controller)
 boardLarge = boardLarge.difference(brain)
 cutout = twoByMetal.movex(boardLarge.getMaxX() - wallSize).movey(brain.getMaxY() + wallSize)
+boardLarge = boardLarge.difference(cutout)
+cutout = cutout.movey(10)
+for(int i = 0; i<3; i++){
+	cutout = threeByMetal.movex(boardLarge.getMaxX() - wallSize).movey(cutout.getMaxY() + 0)
+	boardLarge = boardLarge.difference(cutout)
+}
+cutout = longL.movex(boardLarge.getMaxX() - wallSize).movey(boardLarge.getMaxY() - wallSize)
 boardLarge = boardLarge.difference(cutout)
 
 return boardLarge
