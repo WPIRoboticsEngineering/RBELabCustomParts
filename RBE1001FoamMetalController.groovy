@@ -1,3 +1,6 @@
+import eu.mihosoft.vrl.v3d.svg.*;
+import eu.mihosoft.vrl.v3d.Extrude;
+
 def height = inchesToMilli(1)
 def tractionWheelRadius = inchesToMilli(4/2)
 def omniWheelRadius = inchesToMilli(4.125/2)
@@ -73,6 +76,9 @@ CSG plateHole = new Cube(6,
 						   .toYMin()
 						   .toXMin()
 						   .toZMin()
+
+
+
 CSG battery = CSG.unionAll([new Cube(100,28,height).toCSG().toYMin().toXMax().toZMin(), 
 					   new Cube (161, 23, height).toCSG().toYMin().toXMax().toZMin()])
 
@@ -94,7 +100,7 @@ def moveDiagonal(def angle, def distance, def part){
 			 .movey(distance*Math.cos(Math.toRadians(angle)))
 }
 
-CSG Board = outline
+CSG board = outline
 CSG cutout = tractionWheelHole
 
 for(int i = 0; i<8; i++){
@@ -102,11 +108,11 @@ for(int i = 0; i<8; i++){
 	if(i>3){
 		cutout = omniWheelHole.movex(wallSize).movey(wallSize + i*(wallSize+omniWheelHole.getMaxY()))
 	}
-	Board = Board.difference(cutout)
+	board = board.difference(cutout)
 }
 
 cutout = vexNet.movex(-1 * vexNet.getMinX() + wallSize).movey(cutout.getMaxY() + wallSize)
-Board = Board.difference(cutout)
+board = board.difference(cutout)
 
 for(int i = 0; i<12; i++){
 	cutout = largeGearHole.movex(wallSize*3+omniWheelHole.getMaxX())
@@ -119,15 +125,26 @@ for(int i = 0; i<12; i++){
 		cutout = smallSprocketHole.movex(wallSize*3+omniWheelHole.getMaxX())
 							 .movey(2*(wallSize + largeGearHole.getMaxY()) + i*(wallSize+smallSprocketHole.getMaxY()))
 	}
-	Board = Board.difference(cutout)	    
+	board = board.difference(cutout)	    
 }
 
 cutout = plateHole.movex(wallSize*4 + omniWheelHole.getMaxX() + largeSprocketHole.getMaxX()).movey(wallSize)
-Board = Board.difference(cutout)
+board = board.difference(cutout)
 cutout = cutout.movex(plateHole.getMaxX() + wallSize)
-Board = Board.difference(cutout)
+board = board.difference(cutout)
 cutout = battery.movex(cutout.getMaxX()).movey(cutout.getMaxY() + wallSize + 20)
-Board = Board.difference(cutout)
+board = board.difference(cutout)
+board = board.toXMax().toYMax()
 
-Board.addExportFormat("svg")
-return Board
+CSG boardLarge = new Cube(inchesToMilli(22.5),inchesToMilli(16.75),height).toCSG().toXMin().toYMin().toZMin()
+
+File f = ScriptingEngine
+	.fileFromGit(
+		"https://gist.github.com/30402ce0a4ce4053c2abce63bafc1de2.git",//git repo URL
+		"master",//branch
+		"vexV5Controller.svg"// File from within the Git repo
+	)
+SVGLoad s = new SVGLoad(f.toURI())
+def thing = s.extrude(height,0.01).get(0)
+return thing
+
