@@ -76,18 +76,28 @@ CSG plateHole = new Cube(6,
 						   .toYMin()
 						   .toXMin()
 						   .toZMin()
-
-
-
+						   
 CSG battery = CSG.unionAll([new Cube(100,28,height).toCSG().toYMin().toXMax().toZMin(), 
 					   new Cube (161, 23, height).toCSG().toYMin().toXMax().toZMin()])
 
 CSG vexNet = CSG.unionAll([new Cube(50,20,height).toCSG().toYMin().toXMax().toZMin(), 
 					  new Cube (85, 12, height).toCSG().toYMin().toXMax().toZMin(),
-					  new Cylinder(thumbRadius, thumbRadius, height, (int)30).toCSG().movex(-50).movey(20)])					   
+					  new Cylinder(thumbRadius, thumbRadius, height, (int)30).toCSG().movex(-50).movey(20)])
+
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+CSG boardLarge = new Cube(inchesToMilli(22.5),inchesToMilli(16.75),height).toCSG().toXMin().toYMin().toZMin()						   
+
+CSG brain = new Cube(100, 138, height).toCSG().rotz(90).toYMin().toXMax().toZMin()
+									 .movex(boardLarge.getMaxX() - wallSize).movey(wallSize)
+
+CSG twoByMetal = addThumbHole(CSG.unionAll([new Cube(445, 77, height).toCSG().toYMin().toXMax().toZMin(),
+						 new Cube(317, 15, height).toCSG().toYMax().toXMax().toZMin()]),
+						 thumbCylinder).toYMin().toXMax().toZMin()
 def addThumbHole(def part, def thumb){
-	CSG newCyl = thumb.movex(part.getMaxX()).movey((part.getMinY()+part.getMaxY())/2)
-	thumb = thumb.movex(part.getMinX()).movey((part.getMinY()+part.getMaxY())/2)
+	CSG newCyl = thumb.movey(part.getMaxY()).movex((part.getMinX()+part.getMaxX())/2)
+	thumb = thumb.movey(part.getMinY()).movex((part.getMinX()+part.getMaxX())/2)
 	return CSG.unionAll([newCyl, thumb, part])
 }
 
@@ -136,8 +146,6 @@ cutout = battery.movex(cutout.getMaxX()).movey(cutout.getMaxY() + wallSize + 20)
 board = board.difference(cutout)
 board = board.toXMax().toYMax()
 
-CSG boardLarge = new Cube(inchesToMilli(22.5),inchesToMilli(16.75),height).toCSG().toXMin().toYMin().toZMin()
-
 File f = ScriptingEngine
 	.fileFromGit(
 		"https://gist.github.com/30402ce0a4ce4053c2abce63bafc1de2.git",//git repo URL
@@ -145,6 +153,15 @@ File f = ScriptingEngine
 		"vexV5Controller.svg"// File from within the Git repo
 	)
 SVGLoad s = new SVGLoad(f.toURI())
-def thing = s.extrude(height,0.01).get(0)
-return thing
+def controllerSVG = s.extrude(height,0.01).get(0)
+CSG controller = controllerSVG
+controller = controller.rotz(-180).toXMin().toYMin()
+		   .movex(wallSize).movey(wallSize)
+boardLarge = boardLarge.difference(controller)
+boardLarge = boardLarge.difference(brain)
+cutout = twoByMetal.movex(boardLarge.getMaxX() - wallSize).movey(brain.getMaxY() + wallSize)
+boardLarge = boardLarge.difference(cutout)
+
+return boardLarge
+	   
 
