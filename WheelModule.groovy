@@ -82,7 +82,7 @@ def castor(){
 				.toCSG()
 				.toZMax()
 				.movez(20)
-	.union([CSG.unionAll([new Cylinder(32/2,13).toCSG(),
+	.union([CSG.unionAll([new Cylinder(34/2,13).toCSG(),
 		new Cylinder(5,13).toCSG().movex(38/2),
 		new Cylinder(5,13).toCSG().movex(-38/2)
 		]).hull(),
@@ -245,8 +245,26 @@ def sensorPlate = sensorPlateCore.union([
 	boltHole.move(gridUnits,0,0)
 	])
 	.move(gridUnits*4,-gridUnits,plateLevel)
+Transform moveSensor= new Transform()
+			.rotz(180)
+			.movex(gridUnits*9)
+			.movey(gridUnits*5)
+	
+println "Making castor"
+def cast = castor()
+double castorStandoff = cast.getMinZ()
+double castorDistanceY =gridUnits*(Math.round((wheelbaseIndexY/2.0))+1)
+def movedCastor =cast.toZMin()
+				.movex( gridUnits*wheelbaseIndex/2)
+				.movey(castorDistanceY)
 
-//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff]
+sensorPlate=sensorPlate.transformed(moveSensor)
+sensor=sensor.transformed(moveSensor)
+sensorStandOff=sensorStandOff.transformed(moveSensor)
+			.difference(movedCastor)
+
+
+return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff,movedCastor]
 
 
 
@@ -495,12 +513,11 @@ driveSection= [driveGear,bracket, bracketm,wheelAsmb,tire,motorBlank,bearing,bea
 	it.move(-wheelCenterlineX,tire.getMaxY(),- bevelGears.get(3))
 	.rotx(-90)
 	}
-println "Making castor"
-def cast = castor()
+
 double BottomOfPlate=driveSection[1].getMaxZ()
-double castorStandoff = cast.getMinZ()
+
 double standoffHeight = BottomOfPlate+castorStandoff
-double castorDistanceY =gridUnits*(Math.round((wheelbaseIndexY/2.0))+1)
+
 def standoffPart =CSG.unionAll([ 	new Cylinder(gridUnits/2,standoffHeight).toCSG().movex( gridUnits*0.5),
 							new Cylinder(gridUnits/2,standoffHeight).toCSG().movex( -gridUnits*0.5)
 				]).hull()
@@ -512,9 +529,7 @@ def standoffPart =CSG.unionAll([ 	new Cylinder(gridUnits/2,standoffHeight).toCSG
 				.movez(BottomOfPlate)
 				.movex( gridUnits*wheelbaseIndex/2)
 				.movey(castorDistanceY)
-def movedCastor =cast.toZMin()
-				.movex( gridUnits*wheelbaseIndex/2)
-				.movey(castorDistanceY)
+
 standoffPart=	standoffPart.difference(	movedCastor)	
 
 println "Making hole grid"
