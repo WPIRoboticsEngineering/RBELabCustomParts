@@ -25,7 +25,7 @@ double electronicsBayStandoff = 45
 
 double sensorWidth = mm(2.95)
 double sensorthickness = mm( 0.1)
-double sensorRideHeight=5-sensorthickness
+double sensorRideHeight=10-sensorthickness
 double sensorDepth = mm(0.5)
 double sensorOverlapBracket = 2
 double sensorOverhangBracket = sensorDepth/2
@@ -151,10 +151,16 @@ Transform newBatt = new Transform()
 	.movey(gridUnits/2.0+gridUnits*3)
 	.movex(gridUnits*2)
 	
-
+def notch = new Cube(gridUnits*4,gridUnits*3,gridUnits).toCSG()
+		.movez(rideHeight)
+		.toXMin()
+		.toYMax()
+		.movex(gridUnits*2.5)
+		.movey(gridUnits*1.5)
 
 batteryBox=batteryBox.transformed(newBatt)
 battery=battery.transformed(newBatt)
+			.union(notch)
 
 batteryBox.setName("batteryBox")
 batteryBox.setManufacturing({ toMfg ->
