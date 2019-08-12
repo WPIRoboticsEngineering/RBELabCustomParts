@@ -6,7 +6,7 @@ int depth=1
 double gridUnits = 25
 def wheelbaseIndex = 9
 def wheelbaseIndexY = 9
-def rideHeight = 75
+def rideHeight = 80
 def plateThickness =mm(1.0/4.0)
 def plateLevel = rideHeight+plateThickness
 
@@ -115,7 +115,8 @@ for(double i=gridUnits;i<batteryLong;i+=gridUnits){
 }
 
 def batteryHoles= leftSet.union(rightNutsertSet)
-def batteryBox = new Cube(batteryHoles.getTotalX()+tabThick*2,batteryLong+tabThick*2,batteryShort+tabThick).toCSG()
+def battBoxX=batteryHoles.getTotalX()+tabThick*2
+def batteryBox = new Cube(battBoxX,batteryLong+tabThick*2,batteryShort+tabThick).toCSG()
 			.toYMin()
 			.toZMax()
 			.movez(rideHeight)
@@ -143,12 +144,27 @@ battery.movez(tabThick)
 	  .movey(-tabThick),
 	  batteryBackHole,
 batteryHoles])
+
+Transform newBatt = new Transform()
+	.movex(-centerline)
+	.rotz(90)
+	.movey(gridUnits/2.0+gridUnits*3)
+	.movex(gridUnits*2)
+	
+
+
+batteryBox=batteryBox.transformed(newBatt)
+battery=battery.transformed(newBatt)
+
 batteryBox.setName("batteryBox")
 batteryBox.setManufacturing({ toMfg ->
 	return toMfg
 			.rotx(90)
 			.toZMin()
 })
+
+//return [batteryBox,battery]
+
 CSG standoffCore = new Cylinder(standOffRadius,electronicsBayStandoff).toCSG()
 CSG boltHole = new Cylinder(2.5+0.25,electronicsBayStandoff).toCSG()
 double boltDepth = electronicsBayStandoff-(motorStandoffBoltLen -plateThickness-nursertHeight )
