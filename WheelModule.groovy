@@ -224,12 +224,12 @@ def upper = hingeBase.toZMax().movez(electronicsBayStandoff).union([hingePillar2
 def hingeParts = [upper,lower]
 
 def leftHinge = hingeParts.collect{
-	it.move(gridUnits,gridUnits*5,rideHeight+ plateThickness)
+	it.move(gridUnits*2,gridUnits*6,rideHeight+ plateThickness)
 }
 def rightHinge = hingeParts.collect{
-	it.move(gridUnits*7,gridUnits*5,rideHeight+ plateThickness)
+	it.move(gridUnits*6,gridUnits*6,rideHeight+ plateThickness)
 }
-def cableGuide = upper.move(gridUnits*4,gridUnits*5,rideHeight+ plateThickness)
+def cableGuide = upper.move(gridUnits*4,gridUnits*6,rideHeight+ plateThickness)
 
 CSG sensorPlateCore = new Cylinder(standOffRadius,plateThickness).toCSG()
 
@@ -264,7 +264,7 @@ sensorStandOff=sensorStandOff.transformed(moveSensor)
 			.difference(movedCastor)
 
 
-return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff,movedCastor]
+//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff,movedCastor]
 
 
 
