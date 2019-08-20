@@ -37,11 +37,13 @@ def sensor = new Cube(sensorWidth,sensorDepth,sensorthickness).toCSG()
 			.movey(-gridUnits*2-sensorOverhangBracket-standOffRadius)
 			
 def sensorStandoffCore=new Cylinder(standOffRadius,rideHeight-sensorRideHeight+plateThickness ).toCSG() 
+def snutz = [
+				nutsert.toZMax().movez(sensorStandoffCore.getMaxZ()),
+				nutsert.toZMax().movez(sensorStandoffCore.getMaxZ()).movex(gridUnits)
+				]
 def sensorStandOff = sensorStandoffCore.union(sensorStandoffCore.movex(gridUnits)).hull()
-				.difference([
-				nutsert.toZMax().movez(rideHeight+plateThickness),
-				nutsert.toZMax().movez(rideHeight+plateThickness).movex(gridUnits)
-				])
+				.difference(snutz)
+//return [sensorStandOff,snutz]		
 def skidHole=new Cylinder(2,sensorRideHeight+sensorthickness ).toCSG() 			
 def skidCOre=new Cylinder(sensorOverhangBracket+2,sensorRideHeight+sensorthickness ).toCSG() 
 double skidCorner = sensorWidth/2				
@@ -251,11 +253,16 @@ def sensorPlate = sensorPlateCore.union([
 	boltHole.move(gridUnits,0,0)
 	])
 	.move(gridUnits*4,-gridUnits,plateLevel)
+
 Transform moveSensor= new Transform()
 			.rotz(180)
 			.movex(gridUnits*9)
 			.movey(gridUnits*5)
-	
+
+Transform longSensor= new Transform()
+			//.movex(gridUnits*9)
+			.movey(gridUnits*3)	
+			
 println "Making castor"
 def cast = castor()
 double castorStandoff = cast.getMinZ()
@@ -264,17 +271,21 @@ def movedCastor =cast.toZMin()
 				.movex( gridUnits*wheelbaseIndex/2)
 				.movey(castorDistanceY)
 
-sensorPlate=sensorPlate.transformed(moveSensor)
-sensor=sensor.transformed(moveSensor)
-sensorStandOff=sensorStandOff.transformed(moveSensor)
+def shortsensorPlate=sensorPlate.transformed(moveSensor)
+def shortsensor=sensor.transformed(moveSensor)
+def shortsensorStandOff=sensorStandOff.transformed(moveSensor)
 			.difference(movedCastor)
 
+def longsensorPlate=sensorPlate.transformed(longSensor)
+def longsensor=sensor.transformed(longSensor)
+def longsensorStandOff=sensorStandOff.transformed(longSensor)
 
-//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,sensorPlate,sensor,sensorStandOff,movedCastor]
 
-
-
-
+return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,shortsensorPlate,shortsensor,shortsensorStandOff,movedCastor,
+longsensorPlate,
+longsensor,
+longsensorStandOff
+]
 
 double washerThick = 1
 def motorOptions = []
