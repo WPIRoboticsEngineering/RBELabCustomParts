@@ -317,11 +317,7 @@ CSG kickStand = new Cube (20,batteryBox.getMinY()-longsensorStandOff.getMaxY(),2
 
 longsensorStandOff=longsensorStandOff.union(kickStand)
 
-return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,shortsensorPlate,shortsensor,shortsensorStandOff,movedCastor,
-longsensorPlate,
-longsensor,
-longsensorStandOff
-]
+//return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,shortsensorPlate,shortsensor,shortsensorStandOff,movedCastor,longsensorPlate,longsensor,longsensorStandOff]
 
 double washerThick = 1
 def motorOptions = []
