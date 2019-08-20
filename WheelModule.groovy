@@ -700,12 +700,7 @@ sensorPlate.setName("sensorPlate")
 			.toZMin()
 			.movey(-gridUnits*2)
 })
-plate.addExportFormat("svg")// make an svg of the object
-plate.setName("plate")
-	.setManufacturing({ toMfg ->
-	return toMfg
-			.toZMin()
-})
+
 movedCastor.setManufacturing({ toMfg ->
 	return null
 })
@@ -757,7 +752,25 @@ rightHinge.get(1).setName("rHingeLower")
 	return toMfg
 			.toZMin()
 })
-sensorStandOff.setName("sensorStandOff")
+shortsensorStandOff.setName("shortsensorStandOff")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+})
+shortsensorPlate.addExportFormat("svg")// make an svg of the object
+shortsensorPlate.setName("shortplate")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+})
+
+longsensorStandOff.setName("longsensorStandOff")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+})
+longsensorPlate.addExportFormat("svg")// make an svg of the object
+longsensorPlate.setName("longplate")
 	.setManufacturing({ toMfg ->
 	return toMfg
 			.toZMin()
@@ -773,8 +786,9 @@ standoffRight,
 plate2,
 leftHinge,rightHinge,
 cableGuide,
-sensorPlate,
-sensorStandOff
+shortsensorPlate,
+shortsensorStandOff,
+longsensorPlate,longsensorStandOff
 ]
 return parts
 
