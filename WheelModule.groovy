@@ -308,6 +308,14 @@ def longsensorPlate=sensorPlate.transformed(longSensor)
 def longsensor=longSensorModel.transformed(longSensor)
 def longsensorStandOff=sensorStandOffLong.transformed(longSensor)
 
+CSG kickStand = new Cube (20,batteryBox.getMinY()-longsensorStandOff.getMaxY(),20).toCSG()
+				.toYMin()
+				.toZMin()
+				.movey(longsensorStandOff.getMaxY())
+				.movex(gridUnits*4.5)
+				.movez(longsensorStandOff.getMinZ())
+
+longsensorStandOff=longsensorStandOff.union(kickStand)
 
 return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,shortsensorPlate,shortsensor,shortsensorStandOff,movedCastor,
 longsensorPlate,
