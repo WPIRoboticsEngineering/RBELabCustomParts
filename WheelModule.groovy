@@ -35,13 +35,13 @@ def sensor = new Cube(sensorWidth,sensorDepth,sensorthickness).toCSG()
 			.movez(sensorRideHeight*2)
 			.movex(gridUnits*4.5)
 			.movey(-gridUnits*2-sensorOverhangBracket-standOffRadius)
-			
+double bracketExtention = 	gridUnits	*3	
 def sensorStandoffCore=new Cylinder(standOffRadius,rideHeight-sensorRideHeight+plateThickness ).toCSG() 
 def snutz = [
 				nutsert.toZMax().movez(sensorStandoffCore.getMaxZ()),
 				nutsert.toZMax().movez(sensorStandoffCore.getMaxZ()).movex(gridUnits)
 				]
-def sensorStandOff = sensorStandoffCore.union(sensorStandoffCore.movex(gridUnits)).hull()
+def sensorStandOffWithHoles = sensorStandoffCore.union(sensorStandoffCore.movex(gridUnits)).hull()
 				.difference(snutz)
 //return [sensorStandOff,snutz]		
 def skidHole=new Cylinder(2,sensorRideHeight+sensorthickness ).toCSG() 			
@@ -51,6 +51,11 @@ def skidHolder = skidCOre.movex(-skidCorner).union(skidCOre.movex(skidCorner)).h
 				.movex(gridUnits*0.5)
 skidHolder=skidHolder.union(skidHolder.movez(sensorRideHeight*2)).hull()
 
+def sideBracketLong= skidCOre
+						.toYMin()
+						.movey(-(standOffRadius+sensorOverhangBracket)-bracketExtention)
+						.union(skidCOre)
+						.hull()
 def sideBracket= skidCOre
 						.toYMin()
 						.movey(-(standOffRadius+sensorOverhangBracket))
@@ -60,6 +65,11 @@ def leftSideSensorBracket =sideBracket
 						.movex(skidCorner+gridUnits*0.5)
 def rightSideSensorBracket =sideBracket		
 						.movex(-skidCorner+gridUnits*0.5)
+						
+def leftSideSensorBracketLong =sideBracketLong		
+						.movex(skidCorner+gridUnits*0.5)
+def rightSideSensorBracketLong =sideBracketLong		
+						.movex(-skidCorner+gridUnits*0.5)
 def skidHoleLeft = skidHole
 				.toXMax()
 				.movex(-skidCorner+gridUnits*0.5)
@@ -67,8 +77,16 @@ def skidHoleLeft = skidHole
 def skidHoleRight = skidHole
 				.toXMin()
 				.movex(skidCorner+gridUnits*0.5)
-				.movey(-(standOffRadius+sensorOverhangBracket/3))				
-sensorStandOff=sensorStandOff
+				.movey(-(standOffRadius+sensorOverhangBracket/3))	
+def skidHoleLeftLong = skidHole
+				.toXMax()
+				.movex(-skidCorner+gridUnits*0.5)
+				.movey(-(standOffRadius+sensorOverhangBracket/3)-bracketExtention)
+def skidHoleRightLong = skidHole
+				.toXMin()
+				.movex(skidCorner+gridUnits*0.5)
+				.movey(-(standOffRadius+sensorOverhangBracket/3)-bracketExtention)				
+def sensorStandOff=sensorStandOffWithHoles
 				.union(leftSideSensorBracket)
 				.union(rightSideSensorBracket)
 				.union(skidHolder)
@@ -78,7 +96,17 @@ sensorStandOff=sensorStandOff
 				.movey(-gridUnits*2)
 				.movez(sensorRideHeight)
 				.difference(sensor)
-
+def longSensorModel = 	sensor.movey(-bracketExtention)			
+def sensorStandOffLong=sensorStandOffWithHoles
+				.union(leftSideSensorBracketLong)
+				.union(rightSideSensorBracketLong)
+				.union(skidHolder)
+				.difference(skidHoleLeftLong)
+				.difference(skidHoleRightLong)
+				.movex(gridUnits*4)
+				.movey(-gridUnits*2)
+				.movez(sensorRideHeight)
+				.difference(longSensorModel)
 def castor(){
 	new Sphere(15.8/2)// Spheres radius
 				.toCSG()
@@ -277,8 +305,8 @@ def shortsensorStandOff=sensorStandOff.transformed(moveSensor)
 			.difference(movedCastor)
 
 def longsensorPlate=sensorPlate.transformed(longSensor)
-def longsensor=sensor.transformed(longSensor)
-def longsensorStandOff=sensorStandOff.transformed(longSensor)
+def longsensor=longSensorModel.transformed(longSensor)
+def longsensorStandOff=sensorStandOffLong.transformed(longSensor)
 
 
 return [	battery,batteryBox,standoffLeft,standoffRight,leftHinge,rightHinge,cableGuide,shortsensorPlate,shortsensor,shortsensorStandOff,movedCastor,
