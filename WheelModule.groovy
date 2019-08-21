@@ -693,13 +693,6 @@ standoffRight.setName("standoffPartR")
 			.toYMin()
 			.toZMin()
 })
-sensorPlate.addExportFormat("svg")
-sensorPlate.setName("sensorPlate")
-	.setManufacturing({ toMfg ->
-	return toMfg
-			.toZMin()
-			.movey(-gridUnits*2)
-})
 
 movedCastor.setManufacturing({ toMfg ->
 	return null
@@ -757,6 +750,14 @@ shortsensorStandOff.setName("shortsensorStandOff")
 	return toMfg
 			.toZMin()
 })
+plate.addExportFormat("svg")
+plate.setName("plate")
+	.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+			.movey(-gridUnits*2)
+})
+
 shortsensorPlate.addExportFormat("svg")// make an svg of the object
 shortsensorPlate.setName("shortplate")
 	.setManufacturing({ toMfg ->
