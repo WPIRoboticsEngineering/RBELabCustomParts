@@ -364,8 +364,8 @@ def bolt =new Cylinder(boltData.outerDiameter/2+printerOffset.getMM()/2,boltlen.
 
 
 
-double pitch = 3
-int atheeth =16
+double pitch = 4.1
+int atheeth =12
 println "Making gears..."
 // call a script from another library
 List<Object> bevelGears = (List<Object>)ScriptingEngine
