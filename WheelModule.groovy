@@ -35,7 +35,7 @@ def sensor = new Cube(sensorWidth,sensorDepth,sensorthickness).toCSG()
 			.movez(sensorRideHeight*2)
 			.movex(gridUnits*4.5)
 			.movey(-gridUnits*2-sensorOverhangBracket-standOffRadius)
-double bracketExtention = 	gridUnits	*3	
+double bracketExtention = 	gridUnits	*4	
 def sensorStandoffCore=new Cylinder(standOffRadius,rideHeight-sensorRideHeight+plateThickness ).toCSG() 
 def snutz = [
 				nutsert.toZMax().movez(sensorStandoffCore.getMaxZ()),
