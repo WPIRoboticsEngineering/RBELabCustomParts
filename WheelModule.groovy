@@ -482,6 +482,7 @@ def rightCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		rightHeight, // Height
                       		(int)30 //resolution
                       		).toCSG()	
+                      		
                       			)
                       		.roty(-90)
                       		.toXMin()
@@ -564,7 +565,7 @@ lSideGrid,
 //rSideGrid,
 wheelMountGrid
 ])
-.union(rightCone.movez(-19).movex(-0.25))  
+.union(rightCone.intersect(rightCone.getBoundingBox().movex(0.25)).movez(-19).movex(-0.25))  
 println "Making wheel assembly"
 def wheelAsmb = CSG.unionAll([adrive,wheelCore
 ]).difference([axelBolt,tire,bearing,bearing2
