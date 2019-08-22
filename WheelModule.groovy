@@ -357,6 +357,8 @@ def tire = CSG.unionAll(
 		)
 		.roty(90)
 def bearing =Vitamins.get("ballBearing","695zz").hull().makeKeepaway(printerOffset.getMM()).toZMin()
+//
+//bearing=bearing.union()
 LengthParameter boltlen 			= new LengthParameter("Bolt Length",0.675,[1.2,0])
 boltlen.setMM(50-1.388*2)
 
@@ -405,6 +407,12 @@ bearing=bearing
 		.movez(  bevelGears.get(3))
 		.movex( gearBThickness-bevelGears.get(2)+washerThick)
 bearing2 = bearing.movex(bearing.getTotalX() -gearBThickness-wheelSectionThickness-washerThick)
+			.union(new Cylinder(9.8/2,10).toCSG()
+			.toZMin()
+			.roty(90)
+			.movez(  bevelGears.get(3))
+			.movex( gearBThickness-bevelGears.get(2)+washerThick)
+			)
 CSG outputGear = bevelGears.get(0)
 CSG supportOutputGear = new Cylinder(outputGear.getTotalX()/2-0.1,Math.abs(motorToMountPlaneMinusShoulder)).toCSG()
 					.toZMax()
