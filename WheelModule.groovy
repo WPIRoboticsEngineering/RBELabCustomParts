@@ -468,10 +468,19 @@ def rightCone = new Cylinder(baseSupportRad, // Radius at the bottom
                       		rightHeight, // Height
                       		(int)30 //resolution
                       		).toCSG()
+                      		.intersect(
+                      		new Cylinder(boltData.outerDiameter/2+4, // Radius at the bottom
+                      		boltData.outerDiameter/2+4, // Radius at the top
+                      		rightHeight, // Height
+                      		(int)30 //resolution
+                      		).toCSG()	
+                      			)
                       		.roty(-90)
                       		.toXMin()
                       		.movex(motorPlate.getMinX())
-                      		.movez(  bevelGears.get(3))	
+                      		.movez(  bevelGears.get(3))
+//     return rightCone
+//rightCone=rightCone.union(leftCone.movex(10))              	
 def  sideWallTHickness=motorPlate.getMaxX()-bevelGears.get(0).getMaxX()-5
 
 def sideWallPuckL = new Cylinder(baseSupportRad, // Radius at the bottom
@@ -547,6 +556,7 @@ lSideGrid,
 //rSideGrid,
 wheelMountGrid
 ])
+.union(rightCone.movez(-19).movex(-0.25))  
 println "Making wheel assembly"
 def wheelAsmb = CSG.unionAll([adrive,wheelCore
 ]).difference([axelBolt,tire,bearing,bearing2
