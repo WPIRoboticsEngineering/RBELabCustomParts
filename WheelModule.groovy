@@ -13,6 +13,7 @@ def plateLevel = rideHeight+plateThickness
 def wheelbase=gridUnits*wheelbaseIndex
 CSGDatabase.clear()
 LengthParameter printerOffset 			= new LengthParameter("printerOffset",0.5,[1.2,0])
+printerOffset.setMM(0.25)
 String size ="M5"
 HashMap<String, Object>  boltData = Vitamins.getConfiguration( "capScrew",size)
 double nursertHeight = 9.5
@@ -334,8 +335,9 @@ StringParameter motors = new StringParameter("Motor Type","roundMotor",motorOpti
 StringParameter shafts = new StringParameter("Shaft Type","dShaft",shaftOptions)
 StringParameter motorSize = new StringParameter("Motor Size","WPI-gb37y3530-50en",Vitamins.listVitaminSizes(motors.getStrValue()))
 StringParameter shaftSize = new StringParameter("Shaft Size","WPI-gb37y3530-50en",Vitamins.listVitaminSizes(shafts.getStrValue()))
-
+printerOffset.setMM(0.5)
 def motorBlank= Vitamins.get(motors.getStrValue(),motorSize.getStrValue()).rotz(180)
+printerOffset.setMM(0.25)
 def shaftBlank= Vitamins.get(shafts.getStrValue(),shaftSize.getStrValue())
 HashMap<String, Object>  motorData = Vitamins.getConfiguration( motors.getStrValue(),motorSize.getStrValue())
 
