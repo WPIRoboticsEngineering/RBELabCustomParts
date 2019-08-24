@@ -337,8 +337,9 @@ StringParameter motorSize = new StringParameter("Motor Size","WPI-gb37y3530-50en
 StringParameter shaftSize = new StringParameter("Shaft Size","WPI-gb37y3530-50en",Vitamins.listVitaminSizes(shafts.getStrValue()))
 printerOffset.setMM(0.5)
 def motorBlank= Vitamins.get(motors.getStrValue(),motorSize.getStrValue()).rotz(180)
-printerOffset.setMM(0.25)
+printerOffset.setMM(0.1)
 def shaftBlank= Vitamins.get(shafts.getStrValue(),shaftSize.getStrValue())
+printerOffset.setMM(0.25)
 HashMap<String, Object>  motorData = Vitamins.getConfiguration( motors.getStrValue(),motorSize.getStrValue())
 
 double motorToMountPlane = motorBlank.getMaxZ()
