@@ -1,5 +1,3 @@
-//Your code here
-
 def bracket = new Cube(45,45,2).toCSG()
 				.toZMin()
 				.toXMin()
