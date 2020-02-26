@@ -84,7 +84,7 @@ def tippingTop = new Cube(dowlerCenterToRampEnd*2,rampWidth,woodThickness).toCSG
 					.toZMin()
 					.roty(-rampAngle)
 					.movez(heightOfPlateAtTipping)
-					.difference(tippingRib)
+					//.difference(tippingRib)
 					.setColor(javafx.scene.paint.Color.WHITE);
 					
 def rampTop = new Cube(rampTopLength-4,rampWidth,woodThickness).toCSG()
@@ -92,5 +92,19 @@ def rampTop = new Cube(rampTopLength-4,rampWidth,woodThickness).toCSG()
 			.toXMax()
 			.roty(-rampAngle)
 			.movex(rampRun- dowlerCenterToRampEnd)
-			.difference(lowerRib)
-return [lowerRib,tippingTop,dowel,tippingRib,rampTop]
+			//.difference(lowerRib)
+def supportRibs = []
+def tippingRibs = []
+for(double i=rampWidth/2-10;i>-rampWidth/2;i-=75){
+	println "Adding rib at "+i
+	supportRibs.add(lowerRib.movey(i))
+	tippingRibs.add(tippingRib.movey(i))
+}
+tippingTop=tippingTop.difference(tippingRibs)
+rampTop=rampTop.difference(supportRibs)
+def bottomPlate = new Cube(rampRun+40,rampWidth,woodThickness).toCSG()
+				.toZMax()
+				.toXMin()
+				.movex(-dowlerCenterToRampEnd)
+				.difference(supportRibs)
+return [tippingRibs,tippingTop,dowel,supportRibs,rampTop,bottomPlate]
