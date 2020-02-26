@@ -78,7 +78,7 @@ def lowerRib = new Wedge(rampRun,woodThickness,rampRise).toCSG()
 				.difference(dowel)
 				.union(bottomTeeth)
 				.union(rampTeeth)
-				.difference(rampTop)
+				//.difference(rampTop)
 				.setColor(javafx.scene.paint.Color.BLUE);
 def tippingTop = new Cube(dowlerCenterToRampEnd*2,rampWidth,woodThickness).toCSG()
 					.toZMin()
@@ -93,4 +93,4 @@ def rampTop = new Cube(rampTopLength-4,rampWidth,woodThickness).toCSG()
 			.roty(-rampAngle)
 			.movex(rampRun- dowlerCenterToRampEnd)
 			.difference(lowerRib)
-return [lowerRib,tippingTop,dowel,tippingRib,rampTop,rampTeeth]
+return [lowerRib,tippingTop,dowel,tippingRib,rampTop]
