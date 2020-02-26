@@ -33,8 +33,12 @@ def boxStarting = new Cube(boxDepth+boxThickness,windowWidth,windowHeight+lipDep
 				.difference(chord)
 				.difference(wall.movez(-hookWidth*2/3))
 				.union(hook)	
-
-
+boxStarting.setName("RBE2002-window-box")
+boxStarting.setManufacturing({ toMfg ->
+	return toMfg
+			.roty(90)
+			.toZMin()//move it down to the flat surface
+})	
 
 
 return [wall,boxStarting]
