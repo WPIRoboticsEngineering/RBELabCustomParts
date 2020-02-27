@@ -127,6 +127,64 @@ for(int i=0;i<3;i++){
 					
 		)
 }
+tippingTop.addExportFormat("svg")// make an svg of the object
+rampTop.addExportFormat("svg")// make an svg of the object
+bottomPlate.addExportFormat("svg")// make an svg of the object
+tippingTop.setName("tippingTop")
+rampTop.setName("rampTop")
+bottomPlate.setName("bottomPlate")
+bottomPlate.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+			.toXMin()
+			.toYMin()
+})
+tippingTop.setManufacturing({ toMfg ->
+	return toMfg
+			.transformed(tippingFrame.inverse())
+			.toZMin()
+			.toXMin()
+			.toYMin()
+})
+rampTop.setManufacturing({ toMfg ->
+	return toMfg
+			.transformed(tippingFrame.inverse())
+			.toZMin()
+			.toXMin()
+			.toYMin()
+})
+supportRibs.collect{
+	it.setName("supportRibs")
+	it.setManufacturing({ toMfg ->
+	return toMfg
+			.rotx(90)
+			.toZMin()
+			.toXMin()
+			.toYMin()
+})
+it.addExportFormat("svg")// make an svg of the object
+}
+tippingRibs.collect{
+	it.setManufacturing({ toMfg ->
+	return toMfg
+			.transformed(tippingFrame.inverse())
+			.rotx(90)
+			.toZMin()
+			.toXMin()
+			.toYMin()
+})
+	it.setName("tippingRibs")
+	it.addExportFormat("svg")// make an svg of the object
+}
 
+lipFront.collect{
+	it.setName("lips")
+	it.setManufacturing({ toMfg ->
+	return toMfg
+			.toZMin()
+			.toXMin()
+			.toYMin()
+})
+}
 
 return [tippingRibs,tippingTop,dowel,supportRibs,rampTop,bottomPlate,lipFront]
