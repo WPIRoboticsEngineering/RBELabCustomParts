@@ -13,7 +13,10 @@ double rampSupportlength = dowlerCenterToRampEnd*2-50
 double tippingtopX = dowlerCenterToRampEnd*2
 double centerToRampEdge = rampRun-dowlerCenterToRampEnd
 double rampTopLength =Math.sqrt( Math.pow(rampRun,2)+Math.pow(rampRise,2))-tippingtopX
+double lipRun = Math.tan(Math.toRadians(90-rampAngle))*(woodThickness)
 
+
+def lipWedge =new Wedge(lipRun,rampWidth/3,woodThickness).toCSG()
 
 def dowel = new Cylinder(dowelRadius,rampWidth).toCSG()
 			.rotx(90)
@@ -102,9 +105,28 @@ for(double i=rampWidth/2-10;i>-rampWidth/2;i-=75){
 }
 tippingTop=tippingTop.difference(tippingRibs)
 rampTop=rampTop.difference(supportRibs)
-def bottomPlate = new Cube(rampRun+40,rampWidth,woodThickness).toCSG()
+def bottomPlate = new Cube(rampRun+lipRun,rampWidth,woodThickness).toCSG()
 				.toZMax()
 				.toXMin()
 				.movex(-dowlerCenterToRampEnd)
 				.difference(supportRibs)
-return [tippingRibs,tippingTop,dowel,supportRibs,rampTop,bottomPlate]
+def lipFront=[]
+for(int i=0;i<3;i++){
+	lipFront.add(lipWedge
+		.movex(centerToRampEdge)
+		.movey(i*rampWidth/3-rampWidth/2)
+		.difference(rampTop)
+		.setColor(javafx.scene.paint.Color.PINK)
+					
+		)
+	lipFront.add(lipWedge
+		.movex(centerToRampEdge+lipRun)
+		.movey(i*rampWidth/3-rampWidth/2)
+		.movez(-woodThickness)
+		.setColor(javafx.scene.paint.Color.PINK)
+					
+		)
+}
+
+
+return [tippingRibs,tippingTop,dowel,supportRibs,rampTop,bottomPlate,lipFront]
