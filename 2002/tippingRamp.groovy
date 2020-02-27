@@ -1,4 +1,4 @@
-double woodThickness = 5.34
+double woodThickness = 6.14
 double rampRun = 800
 double rampRise =140
 double dowelRadius = 25.4/4.0
