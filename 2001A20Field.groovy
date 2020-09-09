@@ -3,7 +3,7 @@
 double plateThickness = 0.25*25.4
 
 double roofAngleOne =25
-double RoofAngleTwo = 45
+double roofAngleTwo = 45
 double blockSize = 20
 double houseWidth = 8*25.4
 double mountBoltWidth = 2.5*25.4
@@ -19,7 +19,7 @@ def wedgeOne = new Wedge(blockSize/Math.tan(Math.toRadians(roofAngleOne)),
 					blockSize,
 					blockSize 
 					).toCSG()
-def wedgeTwo = new Wedge(blockSize/Math.tan(Math.toRadians(RoofAngleTwo)),
+def wedgeTwo = new Wedge(blockSize/Math.tan(Math.toRadians(roofAngleTwo)),
 					blockSize,
 					blockSize 
 					).toCSG()
@@ -29,13 +29,13 @@ def block = wedgeOne.union(wedgeTwo)
 
 def boltLocations =[
  	new Transform()
-	.movex(blockSize/2)
+	.movex(blockSize/3)
 	.roty(-roofAngleOne)
 	.movez(blockSize)
 	.movey(blockSize/3),
 	new Transform()
-	.movex(-blockSize/2)
-	.roty(RoofAngleTwo)
+	.movex(-blockSize/3)
+	.roty(roofAngleTwo)
 	.movez(blockSize)
 	.movey(blockSize/3*2),
 	new Transform()
@@ -46,7 +46,16 @@ def boltLocations =[
 	.rotx(90)
 	.movex(blockSize/2+5)
 	.movez(blockSize/3)
-	.movey(blockSize)
+	.movey(blockSize),
+	new Transform()
+	.rotx(90)
+	.movex(-blockSize/2+2)
+	.movez(blockSize/3-2)
+	.movey(blockSize),
+	new Transform()
+	.rotx(-90)
+	.movex(-blockSize/2+2)
+	.movez(blockSize/3-2),
 	]
 				
 
@@ -61,7 +70,7 @@ def bolts =[]
 for(def tr:boltLocations){
 	for(def p:parts){
 		bolts.add(p.transformed(tr))
-		bolts.add(p.transformed(tr).movey(totalDepthOfBuilding-blockSize))
+		bolts.add(p.transformed(tr).movey(houseWidth-blockSize))
 	}
 }
 
@@ -70,11 +79,12 @@ def backPlateHolder = new Cube(plateThickness*2,blockSize+10,blockSize/2).toCSG(
 					.toYMin()
 
 block = block.union(backPlateHolder)
-def blockm = block.mirrory().movey(totalDepthOfBuilding)
+def blockm = block.mirrory().movey(houseWidth)
 
 def centerPlateOver =blockSize/3
-def centerPlate = new Cube(plateThickness,totalDepthOfBuilding-(blockSize*2),buildingHeight-blockSize+centerPlateOver).toCSG()
-				.union(new Cube(plateThickness,totalDepthOfBuilding,buildingHeight-blockSize).toCSG().movez(-centerPlateOver/2))
+def centerPlate = new Cube(plateThickness,houseWidth-(blockSize*2),buildingHeight-blockSize+centerPlateOver).toCSG()
+				.union(new Cube(plateThickness,houseWidth,buildingHeight-blockSize).toCSG()
+				.movez(-centerPlateOver/2))
 				.toYMin()
 				.toZMax()
 				.movez(centerPlateOver)
@@ -87,4 +97,43 @@ centerPlate.setManufacturing ({ mfg ->
 def block1 = block.difference(bolts).difference(centerPlate)
 def block2 = blockm.difference(bolts).difference(centerPlate)
 
-return [	block1	,block2,centerPlate]			
+def roofBolts = [
+	Vitamins.get("capScrew", "M5x25").movey(mountBoltWidth/2),
+	Vitamins.get("capScrew", "M5x25").movey(-mountBoltWidth/2)
+].collect{it.movex(mopuntBoltDown).movez(plateThickness).movey(houseWidth/2)}
+
+def roofPlateBlank = new Cube(hypotOfRoof,houseWidth,plateThickness).toCSG()
+				.toXMin()
+				.toYMin()
+				.toZMin()
+				.difference(new Cube(biteDepthForRoof,biteWidth,plateThickness).toCSG()
+					.toXMax()
+					.toZMin()
+					.movey(houseWidth/2)
+					.movex(hypotOfRoof)
+					.union(roofBolts)
+				)
+
+def roofPlateOne = roofPlateBlank.roty(-roofAngleOne)
+				.movez(blockSize)
+				.difference(bolts)
+def roofPlateTwo = roofPlateBlank
+				.rotz(180)
+				.toYMin()
+				.roty(roofAngleTwo)
+				.movez(blockSize)
+				.difference(bolts)
+def sidePlate = new Cube(totalDepthOfBuilding,plateThickness,buildingHeight).toCSG()
+				.toZMax()
+				.toYMax()
+				.movez(blockSize)				
+				.difference(bolts)
+				
+centerPlate.addExportFormat("svg")
+centerPlate.setManufacturing ({ mfg ->
+	return mfg.roty(90).toZMin()
+})
+
+
+				
+return [	block1	,block2,centerPlate,roofPlateOne,sidePlate,roofPlateTwo]			
