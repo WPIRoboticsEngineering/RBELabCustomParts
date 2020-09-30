@@ -14,6 +14,10 @@ double biteDepthForRoof = 0.5 *25.4
 double biteWidth= 2.75*25.4
 double buildingHeight = 9.75*25.4
 
+def pickup = new Cube(3*25.4,3*25.4,2.5*25.4).toCSG()
+			.toZMin()
+			.movex(100)
+
 
 def wedgeOne = new Wedge(blockSize/Math.tan(Math.toRadians(roofAngleOne)),
 					blockSize,
@@ -128,12 +132,37 @@ def sidePlate = new Cube(totalDepthOfBuilding,plateThickness,buildingHeight).toC
 				.toYMax()
 				.movez(blockSize)				
 				.difference(bolts)
-				
+def sp2 = sidePlate.movey(	houseWidth+plateThickness)			
 centerPlate.addExportFormat("svg")
 centerPlate.setManufacturing ({ mfg ->
 	return mfg.roty(90).toZMin()
 })
 
+sidePlate.addExportFormat("svg")
+sidePlate.setManufacturing ({ mfg ->
+	return mfg.rotx(90).toZMin()
+})
 
-				
-return [	block1	,block2,centerPlate,roofPlateOne,sidePlate,roofPlateTwo]			
+sp2.addExportFormat("svg")
+sp2.setManufacturing ({ mfg ->
+	return mfg.rotx(90).toZMin()
+})
+
+roofPlateOne.addExportFormat("svg")
+roofPlateOne.setManufacturing ({ mfg ->
+	return mfg.roty(roofAngleOne).toZMin()
+})
+
+roofPlateTwo.addExportFormat("svg")
+roofPlateTwo.setManufacturing ({ mfg ->
+	return mfg.roty(-roofAngleTwo).toZMin()
+})
+
+block1.setName("Block1")
+block2.setName("Block2")
+centerPlate.setName("CenterPlate")
+roofPlateOne.setName("roof1")
+roofPlateTwo.setName("roof2")
+sidePlate.setName("SidePlate1")
+sp2.setName("SidePlate2")		
+return [	block1	,block2,centerPlate,roofPlateOne,sidePlate,roofPlateTwo,sp2,pickup]			
