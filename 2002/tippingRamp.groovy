@@ -1,10 +1,12 @@
 double woodThickness = 6.14
-double rampRun = 800
-double rampRise =140
+double rampRun = 400
+double rampRise =70
+
 double dowelRadius = 25.4/4.0
-double dowlerCenterToRampEnd = 200
+double dowlerCenterToRampEnd = rampRun/4
 double rampAngle =Math.toDegrees(Math.atan2(rampRise,rampRun))
-double rampWidth = 500
+double rampWidth = 300
+double ribspacing =rampWidth/2.2
 double radAngle =Math.tan(Math.toRadians(rampAngle))
 double heightOfPlateAtTipping =radAngle*(rampRun-dowlerCenterToRampEnd)
 double dowelDropcenter = dowelRadius*3
@@ -98,7 +100,7 @@ def rampTop = new Cube(rampTopLength-4,rampWidth,woodThickness).toCSG()
 			//.difference(lowerRib)
 def supportRibs = []
 def tippingRibs = []
-for(double i=rampWidth/2-10;i>-rampWidth/2;i-=75){
+for(double i=rampWidth/2-10;i>-rampWidth/2;i-=ribspacing){
 	println "Adding rib at "+i
 	supportRibs.add(lowerRib.movey(i))
 	tippingRibs.add(tippingRib.movey(i))
