@@ -1,11 +1,11 @@
-double woodThickness = 6.14
+double woodThickness = 3.2
 double rampRun = 400
 double rampRise =70
 
-double dowelRadius = 25.4/4.0
+double dowelRadius = 5.5/2
 double dowlerCenterToRampEnd = rampRun/4
 double rampAngle =Math.toDegrees(Math.atan2(rampRise,rampRun))
-double rampWidth = 300
+double rampWidth = 200
 double ribspacing =rampWidth/2.2
 double radAngle =Math.tan(Math.toRadians(rampAngle))
 double heightOfPlateAtTipping =radAngle*(rampRun-dowlerCenterToRampEnd)
