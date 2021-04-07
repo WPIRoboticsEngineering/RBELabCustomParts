@@ -6,7 +6,7 @@ double dowelRadius = 5.5/2
 double dowlerCenterToRampEnd = rampRun/4
 double rampAngle =Math.toDegrees(Math.atan2(rampRise,rampRun))
 double rampWidth = 200
-double ribspacing =rampWidth/2.2
+double ribspacing =rampWidth-(woodThickness*5)
 double radAngle =Math.tan(Math.toRadians(rampAngle))
 double heightOfPlateAtTipping =radAngle*(rampRun-dowlerCenterToRampEnd)
 double dowelDropcenter = dowelRadius*3
@@ -91,10 +91,12 @@ def tippingTop = new Cube(dowlerCenterToRampEnd*2+4,rampWidth,woodThickness).toC
 					.movez(heightOfPlateAtTipping)
 					//.difference(tippingRib)
 					.setColor(javafx.scene.paint.Color.WHITE);
-					
-def rampTop = new Cube(rampTopLength-4,rampWidth,woodThickness).toCSG()
+def offset =woodThickness/Math.sin(Math.toRadians(rampAngle))
+println "Extra Ramp len = "+offset 					
+def rampTop = new Cube(rampTopLength+offset,rampWidth,woodThickness).toCSG()
 			.toZMin()
 			.toXMax()
+			.movex(4+offset)
 			.roty(-rampAngle)
 			.movex(rampRun- dowlerCenterToRampEnd)
 			//.difference(lowerRib)
@@ -107,7 +109,7 @@ for(double i=rampWidth/2-10;i>-rampWidth/2;i-=ribspacing){
 }
 tippingTop=tippingTop.difference(tippingRibs)
 rampTop=rampTop.difference(supportRibs)
-def bottomPlate = new Cube(rampRun+lipRun,rampWidth,woodThickness).toCSG()
+def bottomPlate = new Cube(rampRun,rampWidth,woodThickness).toCSG()
 				.toZMax()
 				.toXMin()
 				.movex(-dowlerCenterToRampEnd)
@@ -189,4 +191,4 @@ lipFront.collect{
 })
 }
 
-return [tippingRibs,tippingTop,dowel,supportRibs,rampTop,bottomPlate,lipFront]
+return [tippingRibs,tippingTop,dowel,supportRibs,rampTop,bottomPlate]
