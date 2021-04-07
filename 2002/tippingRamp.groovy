@@ -91,7 +91,7 @@ def tippingTop = new Cube(dowlerCenterToRampEnd*2+4,rampWidth,woodThickness).toC
 					.movez(heightOfPlateAtTipping)
 					//.difference(tippingRib)
 					.setColor(javafx.scene.paint.Color.WHITE);
-def offset =woodThickness/Math.sin(Math.toRadians(rampAngle))
+def offset =woodThickness/Math.sin(Math.toRadians(rampAngle))+10
 println "Extra Ramp len = "+offset 					
 def rampTop = new Cube(rampTopLength+offset,rampWidth,woodThickness).toCSG()
 			.toZMin()
