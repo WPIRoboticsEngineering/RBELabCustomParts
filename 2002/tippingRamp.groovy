@@ -1,3 +1,6 @@
+
+import eu.mihosoft.vrl.v3d.*
+
 double woodThickness = 3.2
 double rampRun = 400
 double rampRise =70
@@ -85,7 +88,9 @@ def lowerRib = new Wedge(rampRun,woodThickness,rampRise).toCSG()
 				.union(rampTeeth)
 				//.difference(rampTop)
 				.setColor(javafx.scene.paint.Color.BLUE);
-def tippingTop = new Cube(dowlerCenterToRampEnd*2+4,rampWidth,woodThickness).toCSG()
+def extrTippingTopLen = 25.0				
+def tippingTop = new Cube(dowlerCenterToRampEnd*2+4+extrTippingTopLen,rampWidth,woodThickness).toCSG()
+					.movex(-extrTippingTopLen/2.0)
 					.toZMin()
 					.roty(-rampAngle)
 					.movez(heightOfPlateAtTipping)
