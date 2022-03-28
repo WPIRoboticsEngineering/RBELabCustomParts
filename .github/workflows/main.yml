@@ -29,7 +29,7 @@ jobs:
       env:
             GITHUB_TOKEN: ${{ github.token }}
             
-    - name: upload Eclipse artifact
+    - name: Battery Clips STL
       uses: actions/upload-release-asset@v1
       env:
             GITHUB_TOKEN: ${{ github.token }}
@@ -39,7 +39,7 @@ jobs:
             asset_name: V5_Battery_Clip.stl
             asset_content_type: application/binary
             
-    - name: upload Eclipse artifact
+    - name: Battery Clips GCODE
       uses: actions/upload-release-asset@v1
       env:
             GITHUB_TOKEN: ${{ github.token }}
