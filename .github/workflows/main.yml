@@ -1,0 +1,50 @@
+name: "Release"
+on: 
+   push:
+       tags:       
+         - '*'
+
+jobs:
+  release:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository and submodules
+      uses: actions/checkout@v2
+      with:
+         submodules: recursive 
+    - name: Get the version
+      id: get_version
+      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//}   
+      
+    - name: release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+            draft: false
+            prerelease: false
+            release_name: ${{ steps.version.outputs.version }}
+            tag_name: ${{ github.ref }}
+      env:
+            GITHUB_TOKEN: ${{ github.token }}
+            
+    - name: upload Eclipse artifact
+      uses: actions/upload-release-asset@v1
+      env:
+            GITHUB_TOKEN: ${{ github.token }}
+      with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./1001/V5_Battery_Clip.stl
+            asset_name: V5_Battery_Clip.stl
+            asset_content_type: application/binary
+            
+    - name: upload Eclipse artifact
+      uses: actions/upload-release-asset@v1
+      env:
+            GITHUB_TOKEN: ${{ github.token }}
+      with:
+            upload_url: ${{ steps.create_release.outputs.upload_url }}
+            asset_path: ./1001/V5_Battery_Clip.gcode
+            asset_name: V5_Battery_Clip.gcode
+            asset_content_type: application/binary
