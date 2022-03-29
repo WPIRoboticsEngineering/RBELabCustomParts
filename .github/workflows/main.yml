@@ -40,10 +40,7 @@ jobs:
       with:
         java-version: 1.8
         jdkFile: ./zulu8.33.0.1-ca-fx-jdk8.0.192-linux_x64.tar.gz
-    - name: Get the version
-      id: get_version
-      run: echo ::set-output name=VERSION::${GITHUB_REF/refs\/tags\//} 
-      
+
     - name: Download Bowler kernel into CI
       run: wget https://github.com/CommonWealthRobotics/bowler-script-kernel/releases/latest/download/bowler-kernel.jar
       
